@@ -8,7 +8,7 @@ import toml
 # Function to load and merge data from multiple CSV files
 def load_data(bucket_name, file_paths):
     #gcp_credentials = toml.load('.streamlit/secrets.toml')['gcp_service_account']
-    gcp_credentials = st.secrets["[gcp_service_account]"]
+    gcp_credentials = st.secrets["gcp_service_account"]
     fs = gcsfs.GCSFileSystem(token=gcp_credentials)
     #fs = gcsfs.GCSFileSystem(project='airbnbscraper-417722', token=gcp_credentials)
     all_data = pd.DataFrame()
