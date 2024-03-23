@@ -1,1 +1,4 @@
-streamlit>=1.26.0
+gcsfs
+st-files-connection
+selenium==3.141.0
+google-cloud-storage

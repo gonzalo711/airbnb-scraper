@@ -1,50 +1,71 @@
 import streamlit as st
-import numpy as np
 import pandas as pd
-import altair as alt
+import gcsfs
+import seaborn as sns
+import matplotlib.pyplot as plt
 
-# Page title
-st.set_page_config(page_title='Interactive Data Explorer', page_icon='📊')
-st.title('📊 Interactive Data Explorer')
+# Function to load and merge data from multiple CSV files
+def load_data(bucket_name, file_paths):
+    fs = gcsfs.GCSFileSystem(project='airbnbscraper-417722', token='.streamlit/secrets.toml')
+    all_data = pd.DataFrame()
+    for file_path in file_paths:
+        with fs.open(f"gcs://us-central1-airbnbcomposer-b06b3309-bucket/data/") as f:
+            df = pd.read_csv(f)
+            all_data = pd.concat([all_data, df], ignore_index=True)
+    return all_data
 
-with st.expander('About this app'):
-  st.markdown('**What can this app do?**')
-  st.info('This app shows the use of Pandas for data wrangling, Altair for chart creation and editable dataframe for data interaction.')
-  st.markdown('**How to use the app?**')
-  st.warning('To engage with the app, 1. Select genres of your interest in the drop-down selection box and then 2. Select the year duration from the slider widget. As a result, this should generate an updated editable DataFrame and line plot.')
-  
-st.subheader('Which Movie Genre performs ($) best at the box office?')
+# Function to clean and transform data
+def clean_transform_data(df):
+    df['Price'] = df['Price'].str.extract(r'€ (\d+,\d+)')[0].str.replace(',', '').astype(float)
+    df['Check_in'] = pd.to_datetime(df['Check_in'])
+    df['Check_out'] = pd.to_datetime(df['Check_out'])
+    df['number_nights'] = (df['Check_out'] - df['Check_in']).dt.days
+    df['Interval'] = df.apply(lambda row: f"{row['Check_in'].strftime('%Y-%m-%d')} to {row['Check_out'].strftime('%Y-%m-%d')}", axis=1)
+    df['Check_in_day'] = df['Check_in'].dt.dayofweek
+    df['Check_out_day'] = df['Check_out'].dt.dayofweek
+    df['Price_per_night'] = df['Price'] / df['number_nights']
+    df['Period'] = df.apply(lambda row: 'Weekend' if row['Check_in_day'] >= 5 or row['Check_out_day'] >= 5 else 'Weekday', axis=1)
+    return df
 
-# Load data
-df = pd.read_csv('data/movies_genres_summary.csv')
-df.year = df.year.astype('int')
+# Load data from GCS
+bucket_name = 'us-central1-airbnbcomposer-b06b3309-bucket/data'
+file_paths = ['airbnb_final_listings_2024_4.csv', 'airbnb_final_listings_2024_5.csv', 'airbnb_final_listings_2024_6.csv']
+data = load_data(bucket_name, file_paths)
+data = clean_transform_data(data)
 
-# Input widgets
-## Genres selection
-genres_list = df.genre.unique()
-genres_selection = st.multiselect('Select genres', genres_list, ['Action', 'Adventure', 'Biography', 'Comedy', 'Drama', 'Horror'])
+# Streamlit UI
+st.title('Airbnb Listings Dashboard')
+month_selection = st.selectbox('Select Month', data['Check_in'].dt.month_name().unique())
+bedroom_selection = st.selectbox('Select Number of Bedrooms', data['Bedrooms'].unique())
 
-## Year selection
-year_list = df.year.unique()
-year_selection = st.slider('Select year duration', 1986, 2006, (2000, 2016))
-year_selection_list = list(np.arange(year_selection[0], year_selection[1]+1))
+# Filter data based on selections
+filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (data['Bedrooms'] == bedroom_selection)]
 
-df_selection = df[df.genre.isin(genres_selection) & df['year'].isin(year_selection_list)]
-reshaped_df = df_selection.pivot_table(index='year', columns='genre', values='gross', aggfunc='sum', fill_value=0)
-reshaped_df = reshaped_df.sort_values(by='year', ascending=False)
+# Pivot table for Livin Paris
+livin_paris_data = filtered_data[filtered_data['Livinparis'] == 'Yes']
+pivot_table_livin_paris = livin_paris_data.pivot_table(
+    values='Price_per_night',
+    index='Bedrooms',
+    columns='Interval',
+    aggfunc='mean'
+).fillna(0)
 
+# Pivot table for Competitors
+competitors_data = filtered_data[filtered_data['Competitor'] == 'Yes']
+pivot_table_competitors = competitors_data.pivot_table(
+    values='Price_per_night',
+    index='Bedrooms',
+    columns='Interval',
+    aggfunc='mean'
+).fillna(0)
 
-# Display DataFrame
+# Display heatmaps
+st.header('Livin Paris Average Price Per Night')
+fig, ax = plt.subplots()
+sns.heatmap(pivot_table_livin_paris, annot=True, fmt=".2f", cmap='Blues', ax=ax)
+st.pyplot(fig)
 
-df_editor = st.data_editor(reshaped_df, height=212, use_container_width=True,
-                            column_config={"year": st.column_config.TextColumn("Year")},
-                            num_rows="dynamic")
-df_chart = pd.melt(df_editor.reset_index(), id_vars='year', var_name='genre', value_name='gross')
-
-# Display chart
-chart = alt.Chart(df_chart).mark_line().encode(
-            x=alt.X('year:N', title='Year'),
-            y=alt.Y('gross:Q', title='Gross earnings ($)'),
-            color='genre:N'
-            ).properties(height=320)
-st.altair_chart(chart, use_container_width=True)
+st.header('Competitors Average Price Per Night')
+fig, ax = plt.subplots()
+sns.heatmap(pivot_table_competitors, annot=True, fmt=".2f", cmap='Blues', ax=ax)
+st.pyplot(fig)
