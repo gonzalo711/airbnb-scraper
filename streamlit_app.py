@@ -1,11 +1,5 @@
-"""import streamlit as st
-import pandas as pd
-import gcsfs
-import seaborn as sns
-import matplotlib.pyplot as plt
 import toml
-from st_files_connection import FilesConnection"""
-
+from st_files_connection import FilesConnection
 import streamlit as st
 import pandas as pd
 import gcsfs
@@ -14,7 +8,7 @@ import matplotlib.pyplot as plt
 # Ensure these libraries are in your requirements.txt
 
 # Load GCP credentials directly from Streamlit's secrets
-gcp_credentials = {
+"""gcp_credentials = {
     "type": st.secrets["gcp_service_account"]["type"],
     "project_id": st.secrets["gcp_service_account"]["project_id"],
     "private_key_id": st.secrets["gcp_service_account"]["private_key_id"],
@@ -26,10 +20,11 @@ gcp_credentials = {
     "auth_provider_x509_cert_url": st.secrets["gcp_service_account"]["auth_provider_x509_cert_url"],
     "client_x509_cert_url": st.secrets["gcp_service_account"]["client_x509_cert_url"]
 }
-
+"""
 # Use gcsfs to interact with GCS
-fs = gcsfs.GCSFileSystem(token=gcp_credentials)
-
+fs = gcsfs.GCSFileSystem(project=st.secrets["gcp_service_account"]["project_id"],
+                         token=st.secrets["gcp_service_account"])
+                         
 # Define your bucket and files (ensure the file paths are correct)
 bucket_name = 'us-central1-airbnbcomposer-b06b3309-bucket'
 file_paths = ['data/airbnb_final_listings_2024_4.csv',
