@@ -81,9 +81,20 @@ filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (da
 
 # Pivot table and heatmap visualization
 pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
-st.header(f'Average Price Per Night for {month_selection}')
-sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='Blues')
-st.pyplot(plt)
+plt.figure(figsize=(15, 8))
+ax = sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
+
+# Decorate the plot
+ax.set_title('Average Price Per Night Calendar View')
+ax.set_xlabel('Bedrooms')
+ax.set_ylabel('Date')
+
+# Improve the x-axis labels to show weekdays/weekends
+# You can customize DateFormatter based on how you want to show the dates
+date_format = DateFormatter("%b %d\n%A")
+ax.xaxis.set_major_formatter(date_format)
+plt.xticks(rotation=45)
+
 
 filtered_livin_paris = livin_paris_data[(livin_paris_data['Check_in'].dt.month_name() == month_selection) & (livin_paris_data['Bedrooms'] == bedroom_selection)]
 filtered_competitors = competitors_data[(competitors_data['Check_in'].dt.month_name() == month_selection) & (competitors_data['Bedrooms'] == bedroom_selection)]
