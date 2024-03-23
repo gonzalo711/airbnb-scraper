@@ -7,8 +7,10 @@ import toml
 
 # Function to load and merge data from multiple CSV files
 def load_data(bucket_name, file_paths):
-    gcp_credentials = toml.load('.streamlit/secrets.toml')['gcp_service_account']
-    fs = gcsfs.GCSFileSystem(project='airbnbscraper-417722', token=gcp_credentials)
+    #gcp_credentials = toml.load('.streamlit/secrets.toml')['gcp_service_account']
+    gcp_credentials = st.secrets["gcp_service_account"]
+    fs = gcsfs.GCSFileSystem(token=gcp_credentials)
+    #fs = gcsfs.GCSFileSystem(project='airbnbscraper-417722', token=gcp_credentials)
     all_data = pd.DataFrame()
     
     # Ensure the file paths list is not empty and contains valid file paths
@@ -32,6 +34,10 @@ def clean_transform_data(df):
     df['Price_per_night'] = df['Price'] / df['number_nights']
     df['Period'] = df.apply(lambda row: 'Weekend' if row['Check_in_day'] >= 5 or row['Check_out_day'] >= 5 else 'Weekday', axis=1)
     return df
+
+
+st.write(st.secrets)
+
 
 # Load data from GCS
 bucket_name = 'us-central1-airbnbcomposer-b06b3309-bucket/data'
