@@ -2,3 +2,6 @@ gcsfs
 st-files-connection
 selenium==3.141.0
 google-cloud-storage
+seaborn
+pandas
+matplotlib
