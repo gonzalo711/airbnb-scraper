@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 # Ensure these libraries are in your requirements.txt
 
 # Load GCP credentials directly from Streamlit's secrets
-"""gcp_credentials = {
+gcp_credentials = {
     "type": st.secrets["gcp_service_account"]["type"],
     "project_id": st.secrets["gcp_service_account"]["project_id"],
     "private_key_id": st.secrets["gcp_service_account"]["private_key_id"],
@@ -20,11 +20,10 @@ import matplotlib.pyplot as plt
     "auth_provider_x509_cert_url": st.secrets["gcp_service_account"]["auth_provider_x509_cert_url"],
     "client_x509_cert_url": st.secrets["gcp_service_account"]["client_x509_cert_url"]
 }
-"""
+
 # Use gcsfs to interact with GCS
-fs = gcsfs.GCSFileSystem(project=st.secrets["gcp_service_account"]["project_id"],
-                         token=st.secrets["gcp_service_account"])
-                         
+fs = gcsfs.GCSFileSystem(token=gcp_credentials)
+
 # Define your bucket and files (ensure the file paths are correct)
 bucket_name = 'us-central1-airbnbcomposer-b06b3309-bucket'
 file_paths = ['data/airbnb_final_listings_2024_4.csv',
@@ -32,19 +31,46 @@ file_paths = ['data/airbnb_final_listings_2024_4.csv',
               'data/airbnb_final_listings_2024_6.csv']
 
 # Function to load data
-def load_data():
-    all_data = []
+def load_and_merge_csv(bucket_name, file_paths):
+    all_data = pd.DataFrame()
     for file_path in file_paths:
-        full_path = f"{bucket_name}/{file_path}"
-        with fs.open(full_path) as f:
+        with fs.open(f'{bucket_name}/{file_path}') as f:
             df = pd.read_csv(f)
-            all_data.append(df)
-    return pd.concat(all_data, ignore_index=True)
+            all_data = pd.concat([all_data, df], ignore_index=True)
+    return all_data
 
-data = load_data()
-# Continue with your data processing and visualization...
+#Function to clean the data
+def clean_transform_data(df):
+    df['Price'] = df['Price'].str.extract(r'€ (\d+,\d+)')[0].str.replace(',', '').astype(float)
+    df['Check_in'] = pd.to_datetime(df['Check_in'])
+    df['Check_out'] = pd.to_datetime(df['Check_out'])
+    df['number_nights'] = (df['Check_out'] - df['Check_in']).dt.days
+    df['Interval'] = df.apply(lambda row: f"{row['Check_in'].strftime('%Y-%m-%d')} to {row['Check_out'].strftime('%Y-%m-%d')}", axis=1)
+    df['Check_in_day'] = df['Check_in'].dt.dayofweek
+    df['Check_out_day'] = df['Check_out'].dt.dayofweek
+    df['Price_per_night'] = df['Price'] / df['number_nights']
+    df['Period'] = df.apply(lambda row: 'Weekend' if row['Check_in_day'] >= 5 or row['Check_out_day'] >= 5 else 'Weekday', axis=1)
+    return df
 
+# Load, clean, and transform data
+bucket_name = 'us-central1-airbnbcomposer-b06b3309-bucket/data'
+file_paths = ['airbnb_final_listings_2024_4.csv', 'airbnb_final_listings_2024_5.csv', 'airbnb_final_listings_2024_6.csv']
+data = load_and_merge_csv(bucket_name, file_paths)
+data = clean_transform_data(data)
 
+# Streamlit UI for interactive visualization
+st.title('Airbnb Listings Analysis')
+month_selection = st.selectbox('Select Month', data['Check_in'].dt.month_name().unique())
+bedroom_selection = st.selectbox('Select Number of Bedrooms', sorted(data['Bedrooms'].unique()))
+
+# Filter data
+filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (data['Bedrooms'] == bedroom_selection)]
+
+# Pivot table and heatmap visualization
+pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
+st.header(f'Average Price Per Night for {month_selection}')
+sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='Blues')
+st.pyplot(plt)
 
 
 
@@ -73,19 +99,6 @@ def load_data(bucket_name, file_paths):
                 df = pd.read_csv(f)
                 all_data = pd.concat([all_data, df], ignore_index=True)
     return all_data
-
-# Function to clean and transform data
-def clean_transform_data(df):
-    df['Price'] = df['Price'].str.extract(r'€ (\d+,\d+)')[0].str.replace(',', '').astype(float)
-    df['Check_in'] = pd.to_datetime(df['Check_in'])
-    df['Check_out'] = pd.to_datetime(df['Check_out'])
-    df['number_nights'] = (df['Check_out'] - df['Check_in']).dt.days
-    df['Interval'] = df.apply(lambda row: f"{row['Check_in'].strftime('%Y-%m-%d')} to {row['Check_out'].strftime('%Y-%m-%d')}", axis=1)
-    df['Check_in_day'] = df['Check_in'].dt.dayofweek
-    df['Check_out_day'] = df['Check_out'].dt.dayofweek
-    df['Price_per_night'] = df['Price'] / df['number_nights']
-    df['Period'] = df.apply(lambda row: 'Weekend' if row['Check_in_day'] >= 5 or row['Check_out_day'] >= 5 else 'Weekday', axis=1)
-    return df
 
 
 st.write(st.secrets)
