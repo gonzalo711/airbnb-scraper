@@ -1,19 +1,64 @@
-import streamlit as st
+"""import streamlit as st
 import pandas as pd
 import gcsfs
 import seaborn as sns
 import matplotlib.pyplot as plt
 import toml
-from st_files_connection import FilesConnection
+from st_files_connection import FilesConnection"""
+
+import streamlit as st
+import pandas as pd
+import gcsfs
+import seaborn as sns
+import matplotlib.pyplot as plt
+# Ensure these libraries are in your requirements.txt
+
+# Load GCP credentials directly from Streamlit's secrets
+gcp_credentials = {
+    "type": st.secrets["gcp_service_account"]["type"],
+    "project_id": st.secrets["gcp_service_account"]["project_id"],
+    "private_key_id": st.secrets["gcp_service_account"]["private_key_id"],
+    "private_key": st.secrets["gcp_service_account"]["private_key"],
+    "client_email": st.secrets["gcp_service_account"]["client_email"],
+    "client_id": st.secrets["gcp_service_account"]["client_id"],
+    "auth_uri": st.secrets["gcp_service_account"]["auth_uri"],
+    "token_uri": st.secrets["gcp_service_account"]["token_uri"],
+    "auth_provider_x509_cert_url": st.secrets["gcp_service_account"]["auth_provider_x509_cert_url"],
+    "client_x509_cert_url": st.secrets["gcp_service_account"]["client_x509_cert_url"]
+}
+
+# Use gcsfs to interact with GCS
+fs = gcsfs.GCSFileSystem(token=gcp_credentials)
+
+# Define your bucket and files (ensure the file paths are correct)
+bucket_name = 'us-central1-airbnbcomposer-b06b3309-bucket'
+file_paths = ['data/airbnb_final_listings_2024_4.csv',
+              'data/airbnb_final_listings_2024_5.csv',
+              'data/airbnb_final_listings_2024_6.csv']
+
+# Function to load data
+def load_data():
+    all_data = []
+    for file_path in file_paths:
+        full_path = f"{bucket_name}/{file_path}"
+        with fs.open(full_path) as f:
+            df = pd.read_csv(f)
+            all_data.append(df)
+    return pd.concat(all_data, ignore_index=True)
+
+data = load_data()
+# Continue with your data processing and visualization...
 
 
 
-conn = st.connection('gcs', type=FilesConnection)
+
+
+"""conn = st.connection('gcs', type=FilesConnection)
 df = conn.read("us-central1-airbnbcomposer-b06b3309-bucket/myfile.csv", input_format="csv", ttl=600)
 
 # Print results.
 for row in df.itertuples():
-    st.write(f"{row.Owner} has a :{row.Pet}:")
+    st.write(f"{row.Owner} has a :{row.Pet}:")"""
 
 
 """
