@@ -4,7 +4,19 @@ import gcsfs
 import seaborn as sns
 import matplotlib.pyplot as plt
 import toml
+from st_files_connection import FilesConnection
 
+
+
+conn = st.connection('gcs', type=FilesConnection)
+df = conn.read("us-central1-airbnbcomposer-b06b3309-bucket/myfile.csv", input_format="csv", ttl=600)
+
+# Print results.
+for row in df.itertuples():
+    st.write(f"{row.Owner} has a :{row.Pet}:")
+
+
+"""
 # Function to load and merge data from multiple CSV files
 def load_data(bucket_name, file_paths):
     #gcp_credentials = toml.load('.streamlit/secrets.toml')['gcp_service_account']
@@ -81,3 +93,4 @@ st.header('Competitors Average Price Per Night')
 fig, ax = plt.subplots()
 sns.heatmap(pivot_table_competitors, annot=True, fmt=".2f", cmap='Blues', ax=ax)
 st.pyplot(fig)
+"""
