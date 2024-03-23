@@ -5,6 +5,9 @@ import pandas as pd
 import gcsfs
 import seaborn as sns
 import matplotlib.pyplot as plt
+from matplotlib.dates import DateFormatter
+import matplotlib.dates as mdates
+
 # Ensure these libraries are in your requirements.txt
 
 # Load GCP credentials directly from Streamlit's secrets
@@ -115,6 +118,14 @@ cmap = sns.diverging_palette(10, 133, as_cmap=True)
 sns.heatmap(percentage_difference, annot=True, fmt=".2f", cmap=cmap, center=0,
             cbar_kws={'label': 'Percentage Difference'})
 st.pyplot(plt)
+
+
+st.download_button(
+    label="Download data as CSV",
+    data=data.to_csv().encode('utf-8'),
+    file_name='consolidated_data.csv',
+    mime='text/csv',
+)
 
 
 """conn = st.connection('gcs', type=FilesConnection)
