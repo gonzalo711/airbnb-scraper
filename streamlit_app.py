@@ -37,6 +37,7 @@ def load_and_merge_csv(bucket_name, file_paths):
         with fs.open(f'{bucket_name}/{file_path}') as f:
             df = pd.read_csv(f)
             all_data = pd.concat([all_data, df], ignore_index=True)
+    all_data.to_csv('final.csv', index=False)
     return all_data
 
 #Function to clean the data
@@ -58,8 +59,20 @@ file_paths = ['airbnb_final_listings_2024_4.csv', 'airbnb_final_listings_2024_5.
 data = load_and_merge_csv(bucket_name, file_paths)
 data = clean_transform_data(data)
 
+
+livin_paris_data = data[data['Livinparis'] == 'Yes']
+competitors_data = data[data['Competitor'] == 'Yes']
+
+def calculate_percentage_difference(livin_paris_data, competitors_data):
+    # Ensure both dataframes have the same structure
+    combined = livin_paris_data.merge(competitors_data, on=['Bedrooms', 'Interval'], suffixes=('_livin', '_comp'))
+    combined['Percentage Difference'] = ((combined['Price_per_night_livin'] - combined['Price_per_night_comp']) / combined['Price_per_night_comp']) * 100
+    percentage_difference_pivot = combined.pivot("Bedrooms", "Interval", "Percentage Difference")
+    return percentage_difference_pivot
+
+
 # Streamlit UI for interactive visualization
-st.title('Airbnb Listings Analysis')
+st.title('🏡 Airbnb competitor pricing Analysis')
 month_selection = st.selectbox('Select Month', data['Check_in'].dt.month_name().unique())
 bedroom_selection = st.selectbox('Select Number of Bedrooms', sorted(data['Bedrooms'].unique()))
 
@@ -72,6 +85,25 @@ st.header(f'Average Price Per Night for {month_selection}')
 sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='Blues')
 st.pyplot(plt)
 
+filtered_livin_paris = livin_paris_data[(livin_paris_data['Check_in'].dt.month_name() == month_selection) & (livin_paris_data['Bedrooms'] == bedroom_selection)]
+filtered_competitors = competitors_data[(competitors_data['Check_in'].dt.month_name() == month_selection) & (competitors_data['Bedrooms'] == bedroom_selection)]
+
+# Pivot tables for LivinParis and Competitors
+pivot_livin = filtered_livin_paris.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
+pivot_competitors = filtered_competitors.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
+
+# Calculate percentage difference
+percentage_difference = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
+
+# Visualize the heatmaps
+st.header('Percentage Difference between LivinParis and Competitors')
+
+# Custom colormap
+cmap = sns.diverging_palette(10, 133, as_cmap=True)
+
+sns.heatmap(percentage_difference, annot=True, fmt=".2f", cmap=cmap, center=0,
+            cbar_kws={'label': 'Percentage Difference'})
+st.pyplot(plt)
 
 
 """conn = st.connection('gcs', type=FilesConnection)
