@@ -3,15 +3,21 @@ import pandas as pd
 import gcsfs
 import seaborn as sns
 import matplotlib.pyplot as plt
+import toml
 
 # Function to load and merge data from multiple CSV files
 def load_data(bucket_name, file_paths):
-    fs = gcsfs.GCSFileSystem(project='airbnbscraper-417722', token='.streamlit/secrets.toml')
+    gcp_credentials = toml.load('.streamlit/secrets.toml')['gcp_service_account']
+    fs = gcsfs.GCSFileSystem(project='airbnbscraper-417722', token=gcp_credentials)
     all_data = pd.DataFrame()
-    for file_path in file_paths:
-        with fs.open(f"gcs://us-central1-airbnbcomposer-b06b3309-bucket/data/") as f:
-            df = pd.read_csv(f)
-            all_data = pd.concat([all_data, df], ignore_index=True)
+    
+    # Ensure the file paths list is not empty and contains valid file paths
+    if file_paths and all(isinstance(path, str) for path in file_paths):
+        for file_path in file_paths:
+            full_path = f"{bucket_name}/{file_path}"
+            with fs.open(full_path) as f:
+                df = pd.read_csv(f)
+                all_data = pd.concat([all_data, df], ignore_index=True)
     return all_data
 
 # Function to clean and transform data
