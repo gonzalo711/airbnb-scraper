@@ -3,8 +3,9 @@
 
 # In[ ]:
 
-import os
+pip install google-cloud-storage
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+import os
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.chrome.options import Options
@@ -15,8 +16,6 @@ from datetime import datetime, timedelta
 import pandas as pd
 import calendar
 from urllib.parse import urlparse, parse_qs
-from google.cloud import storage
-
 
 
 
@@ -162,20 +161,7 @@ def scrape_data(driver, url, competitors_ids,livinparis_ids, max_pages=5):
             break
 
     return listings    
-
-
-
-def upload_to_gcs(bucket_name, source_file_names):
-    """Uploads a file to the bucket."""
-    storage_client = storage.Client()
-    bucket = storage_client.bucket(bucket_name)
-
-    for source_file_name in source_file_names:
-        destination_blob_name = os.path.basename(source_file_name)
-        blob = bucket.blob(destination_blob_name)
-        blob.upload_from_filename(source_file_name)
-        print(f"File {source_file_name} uploaded to {destination_blob_name}.")
-
+      
 
 def main():
     
@@ -194,7 +180,7 @@ def main():
     months_to_scrape = [(year + month // 12, month % 12 if month % 12 != 0 else 12) for year, month in months_to_scrape]
 
     bedrooms_guests_mapping = {2: 6, 3: 8, 4: 10}
-    csv_filenames = []
+    bedrooms_guests_mapping = {2: 6, 3: 8, 4: 10}  # Example mapping
     
     
     competitors_ids = ["1067185846882110336", "1056273391664839516", "2535408", "923083442903877154", "23708945", 
@@ -261,11 +247,7 @@ def main():
         df = pd.DataFrame(all_listings)
         csv_filename = f"airbnb_final_listings_{year}_{month}.csv"
         df.to_csv(csv_filename, index=False)
-        csv_filenames.append(csv_filename)  # Add the filename to the list
         print(f"Data saved to {csv_filename}")
-    
-    # After scraping and saving all CSVs, upload them to GCS
-    upload_to_gcs('us-central1-airbnbcomposer-b06b3309-bucket', csv_filenames)
 
     driver.quit()
 
