@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 import matplotlib.dates as mdates
 import numpy as np
+import plotly.figure_factory as ff
+
 # Ensure these libraries are in your requirements.txt
 
 # Load GCP credentials directly from Streamlit's secrets
@@ -84,7 +86,7 @@ def calculate_percentage_difference(livin_paris_data, competitors_data):
 
 
 # Streamlit UI for interactive visualization
-st.title('🏡 Airbnb competitor pricing Analysis')
+st.header('🏡 Airbnb competitor pricing Analysis',divider="rainbow")
     
 month_selection = st.selectbox('Select Month', data['Check_in'].dt.month_name().unique())
 bedroom_selection = st.selectbox('Select Number of Bedrooms', sorted(data['Bedrooms'].unique()))
@@ -102,8 +104,14 @@ percentage_of_total_competitors = (competitors_count / total_count * 100) if tot
 delta_livin_paris = "{:.2f}%".format(percentage_of_total_livin_paris)
 delta_competitors = "{:.2f}%".format(percentage_of_total_competitors)
 
-st.metric(label="LivinParis Apartments", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
-st.metric(label="Competitor Apartments", value=competitors_count, delta=delta_competitors, delta_color="off")
+st.subheader("How mych ")
+col1, col2, col3 = st.columns([0.4, 0.3, 0.3])
+with col1:
+    st.metric(label="Total apartments scraped", value=total_count)
+with col2:
+    st.metric(label="LivinParis Apartments", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
+with col3:
+    st.metric(label="Competitor Apartments", value=competitors_count, delta=delta_competitors, delta_color="off")
 
 
 st.download_button(
@@ -113,8 +121,34 @@ st.download_button(
     mime='text/csv',
 )
 
-# Filter data
+# Plotly Heatmap for Average Price Per Night
+pivot_avg_price = filtered_data.pivot_table(index='Interval', columns='Bedrooms', values='Price_per_night', aggfunc='mean').fillna(0)
+fig_avg_price = ff.create_annotated_heatmap(
+    z=pivot_avg_price.values,
+    x=pivot_avg_price.columns.tolist(),
+    y=pivot_avg_price.index.tolist(),
+    annotation_text=np.around(pivot_avg_price.values, decimals=2).astype(str),
+    colorscale='Viridis',
+    showscale=True
+)
+fig_avg_price.update_layout(title_text='Average Price Per Night', xaxis_title="Bedrooms", yaxis_title="Interval")
+st.plotly_chart(fig_avg_price, use_container_width=True)
 
+# Plotly Heatmap for Percentage Difference between LivinParis and Competitors
+# Ensure calculate_percentage_difference is correctly implemented
+pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
+fig_percentage_diff = ff.create_annotated_heatmap(
+    z=pivot_percentage_diff.values,
+    x=pivot_percentage_diff.columns.tolist(),
+    y=pivot_percentage_diff.index.tolist(),
+    annotation_text=np.around(pivot_percentage_diff.values, decimals=2).astype(str),
+    colorscale='RdBu',
+    showscale=True
+)
+
+
+fig_percentage_diff.update_layout(title_text='Percentage Difference between LivinParis and Competitors', xaxis_title="Interval", yaxis_title="Bedrooms")
+st.plotly_chart(fig_percentage_diff, use_container_width=True)
 # Pivot table and heatmap visualization
 pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
 plt.figure(figsize=(15, 8))

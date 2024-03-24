@@ -8,3 +8,4 @@ matplotlib
 toml
 numpy
 urllib3
+plotly
