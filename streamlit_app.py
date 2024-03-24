@@ -76,9 +76,6 @@ data = load_and_merge_csv(bucket_name, file_paths)
 data = clean_transform_data(data)
 
 
-livin_paris_data = data[data['Livinparis'] == 'Yes']
-competitors_data = data[data['Competitor'] == 'Yes']
-
 def calculate_percentage_difference(livin_paris_data, competitors_data):
     # Ensure both dataframes have the same structure
     combined = livin_paris_data.merge(competitors_data, on=['Bedrooms', 'Interval'], suffixes=('_livin', '_comp'))
@@ -92,8 +89,24 @@ st.title('🏡 Airbnb competitor pricing Analysis')
 month_selection = st.selectbox('Select Month', data['Check_in'].dt.month_name().unique())
 bedroom_selection = st.selectbox('Select Number of Bedrooms', sorted(data['Bedrooms'].unique()))
 
-# Filter data
 filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (data['Bedrooms'] == bedroom_selection)]
+
+livin_paris_count = filtered_data[filtered_data['Livinparis'] == 'Yes'].shape[0]
+competitors_count = filtered_data[filtered_data['Competitor'] == 'Yes'].shape[0]
+
+
+st.metric(label="LivinParis apartments", value=livin_paris_count, delta=None, delta_color="normal", help=None, label_visibility="visible")
+st.metric(label="Competitors apartments", value=competitors_count, delta=None, delta_color="normal", help=None, label_visibility="visible")
+
+
+st.download_button(
+    label="Download data as CSV",
+    data=data.to_csv().encode('utf-8'),
+    file_name='consolidated_data.csv',
+    mime='text/csv',
+)
+
+# Filter data
 
 # Pivot table and heatmap visualization
 pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
@@ -110,63 +123,3 @@ ax.set_ylabel('Date')
 date_format = DateFormatter("%b %d\n%A")
 ax.xaxis.set_major_formatter(date_format)
 plt.xticks(rotation=45)
-
-"""
-filtered_livin_paris = livin_paris_data[(livin_paris_data['Check_in'].dt.month_name() == month_selection) & (livin_paris_data['Bedrooms'] == bedroom_selection)]
-filtered_competitors = competitors_data[(competitors_data['Check_in'].dt.month_name() == month_selection) & (competitors_data['Bedrooms'] == bedroom_selection)]
-
-# Pivot tables for LivinParis and Competitors
-pivot_livin = filtered_livin_paris.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
-pivot_competitors = filtered_competitors.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
-
-# Calculate percentage difference
-percentage_difference = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
-
-# Visualize the heatmaps
-st.header('Percentage Difference between LivinParis and Competitors')
-
-# Custom colormap
-cmap = sns.diverging_palette(10, 133, as_cmap=True)
-
-sns.heatmap(percentage_difference, annot=True, fmt=".2f", cmap=cmap, center=0,
-            cbar_kws={'label': 'Percentage Difference'})
-st.pyplot(plt)
-
-
-st.download_button(
-    label="Download data as CSV",
-    data=data.to_csv().encode('utf-8'),
-    file_name='consolidated_data.csv',
-    mime='text/csv',
-)
-
-
-# Pivot table for Livin Paris
-livin_paris_data = filtered_data[filtered_data['Livinparis'] == 'Yes']
-pivot_table_livin_paris = livin_paris_data.pivot_table(
-    values='Price_per_night',
-    index='Bedrooms',
-    columns='Interval',
-    aggfunc='mean'
-).fillna(0)
-
-# Pivot table for Competitors
-competitors_data = filtered_data[filtered_data['Competitor'] == 'Yes']
-pivot_table_competitors = competitors_data.pivot_table(
-    values='Price_per_night',
-    index='Bedrooms',
-    columns='Interval',
-    aggfunc='mean'
-).fillna(0)
-
-# Display heatmaps
-st.header('Livin Paris Average Price Per Night')
-fig, ax = plt.subplots()
-sns.heatmap(pivot_table_livin_paris, annot=True, fmt=".2f", cmap='Blues', ax=ax)
-st.pyplot(fig)
-
-st.header('Competitors Average Price Per Night')
-fig, ax = plt.subplots()
-sns.heatmap(pivot_table_competitors, annot=True, fmt=".2f", cmap='Blues', ax=ax)
-st.pyplot(fig)
-"""
