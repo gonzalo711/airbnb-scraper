@@ -136,7 +136,7 @@ st.download_button(
 )
 
 # Plotly Heatmap for Average Price Per Night
-pivot_avg_price = filtered_data.pivot_table(index='Interval', columns='Bedrooms', values='Price_per_night', aggfunc='mean').fillna(0)
+pivot_avg_price = filtered_data.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
 fig_avg_price = ff.create_annotated_heatmap(
     z=pivot_avg_price.values,
     x=pivot_avg_price.columns.tolist(),
@@ -160,10 +160,10 @@ fig_percentage_diff = ff.create_annotated_heatmap(
     showscale=True
 )
 
-fig_percentage_diff.update_layout(title_text='Percentage Difference between LivinParis and Competitors', xaxis_title="Interval", yaxis_title="Bedrooms")
+fig_percentage_diff.update_layout(title_text='Percentage Difference between LivinParis and Competitors', xaxis_title="Bedrooms", yaxis_title="Interval")
 st.plotly_chart(fig_percentage_diff, use_container_width=True)
 # Pivot table and heatmap visualization
-pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
+pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Interval', columns='Bedrooms', aggfunc='mean').fillna(0)
 plt.figure(figsize=(15, 8))
 ax = sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
 
