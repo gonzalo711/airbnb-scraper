@@ -78,11 +78,21 @@ data = clean_transform_data(data)
 
 
 def calculate_percentage_difference(livin_paris_data, competitors_data):
-    # Ensure both dataframes have the same structure
-    combined = livin_paris_data.merge(competitors_data, on=['Bedrooms', 'Interval'], suffixes=('_livin', '_comp'))
-    combined['Percentage Difference'] = ((combined['Price_per_night_livin'] - combined['Price_per_night_comp']) / combined['Price_per_night_comp']) * 100
-    percentage_difference_pivot = combined.pivot("Bedrooms", "Interval", "Percentage Difference")
+    # Calculating average price per night for LivinParis and competitors
+    avg_price_livin = livin_paris_data.groupby('Interval')['Price_per_night'].mean().reset_index()
+    avg_price_comp = competitors_data.groupby('Interval')['Price_per_night'].mean().reset_index()
+    
+    # Merging the average prices on Interval
+    combined = pd.merge(avg_price_livin, avg_price_comp, on='Interval', suffixes=('_livin', '_comp'))
+    
+    # Calculating the percentage difference
+    combined['Percentage Difference'] = (combined['Price_per_night_livin'] - combined['Price_per_night_comp']) / combined['Price_per_night_comp'] * 100
+    
+    # Pivot table for visualization
+    percentage_difference_pivot = combined.pivot_table(index='Interval', values='Percentage Difference', aggfunc='mean').fillna(0)
+    
     return percentage_difference_pivot
+
 
 
 # Streamlit UI for interactive visualization
@@ -149,7 +159,6 @@ fig_percentage_diff = ff.create_annotated_heatmap(
     colorscale='RdBu',
     showscale=True
 )
-
 
 fig_percentage_diff.update_layout(title_text='Percentage Difference between LivinParis and Competitors', xaxis_title="Interval", yaxis_title="Bedrooms")
 st.plotly_chart(fig_percentage_diff, use_container_width=True)
