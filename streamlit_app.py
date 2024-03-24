@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 import matplotlib.dates as mdates
 import numpy as np
+from streamlit_option_menu import option_menu
 
 # Ensure these libraries are in your requirements.txt
 
@@ -86,6 +87,13 @@ def calculate_percentage_difference(livin_paris_data, competitors_data):
 
 # Streamlit UI for interactive visualization
 st.title('🏡 Airbnb competitor pricing Analysis')
+
+
+with st.sidebar:
+    selected = option_menu("Main Menu", ["Home", 'Settings'],
+        icons=['house', 'gear'], menu_icon="cast", default_index=1)
+    selected
+    
 month_selection = st.selectbox('Select Month', data['Check_in'].dt.month_name().unique())
 bedroom_selection = st.selectbox('Select Number of Bedrooms', sorted(data['Bedrooms'].unique()))
 
@@ -94,9 +102,16 @@ filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (da
 livin_paris_count = filtered_data[filtered_data['Livinparis'] == 'Yes'].shape[0]
 competitors_count = filtered_data[filtered_data['Competitor'] == 'Yes'].shape[0]
 
+total_count = filtered_data.shape[0]
 
-st.metric(label="LivinParis apartments", value=livin_paris_count, delta=None, delta_color="normal", help=None, label_visibility="visible")
-st.metric(label="Competitors apartments", value=competitors_count, delta=None, delta_color="normal", help=None, label_visibility="visible")
+percentage_of_total_livin_paris = (livin_paris_count / total_count * 100) if total_count else 0
+percentage_of_total_competitors = (competitors_count / total_count * 100) if total_count else 0
+
+delta_livin_paris = "{:.2f}%".format(percentage_of_total_livin_paris)
+delta_competitors = "{:.2f}%".format(percentage_of_total_competitors)
+
+st.metric(label="LivinParis Apartments", value=livin_paris_count, delta=delta_livin_paris, delta_color="normal",delta_color="off")
+st.metric(label="Competitor Apartments", value=competitors_count, delta=delta_competitors, delta_color="normal",delta_color="off")
 
 
 st.download_button(
