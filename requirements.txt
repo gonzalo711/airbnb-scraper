@@ -8,4 +8,4 @@ matplotlib
 toml
 numpy
 urllib3
-plotly
+plotly==5.5.0
