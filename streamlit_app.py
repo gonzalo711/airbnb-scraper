@@ -166,4 +166,3 @@ st.header('Competitors Average Price Per Night')
 fig, ax = plt.subplots()
 sns.heatmap(pivot_table_competitors, annot=True, fmt=".2f", cmap='Blues', ax=ax)
 st.pyplot(fig)
-"""
