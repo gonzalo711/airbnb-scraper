@@ -103,7 +103,7 @@ col1, col2= st.columns([0.8, 0.2])
 with col1:
     st.header('🏡 Airbnb competitor pricing Analysis',divider="rainbow")
 with col2:
-    st.image("images/linvinparis.png", caption="Example Image")
+    st.image("pictures/linvinparis.png")
 
 st.subheader("Please select the month and number of bedrooms for the benchmark")
 col1, col2= st.columns([0.5, 0.5])
@@ -150,6 +150,9 @@ st.download_button(
 
 # Plotly Heatmap for Average Price Per Night
 pivot_avg_price = filtered_data.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
+
+st.divider()
+
 fig_avg_price = ff.create_annotated_heatmap(
     z=pivot_avg_price.values,
     x=pivot_avg_price.columns.tolist(),
@@ -169,7 +172,7 @@ fig_percentage_diff = ff.create_annotated_heatmap(
     x=pivot_percentage_diff.columns.tolist(),
     y=pivot_percentage_diff.index.tolist(),
     annotation_text=np.around(pivot_percentage_diff.values, decimals=2).astype(str),
-    colorscale='RdBu',
+    colorscale='RdYlGn',
     showscale=True
 )
 
