@@ -9,8 +9,6 @@ import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 import matplotlib.dates as mdates
 import numpy as np
-from streamlit_option_menu import option_menu
-
 # Ensure these libraries are in your requirements.txt
 
 # Load GCP credentials directly from Streamlit's secrets
@@ -87,12 +85,6 @@ def calculate_percentage_difference(livin_paris_data, competitors_data):
 
 # Streamlit UI for interactive visualization
 st.title('🏡 Airbnb competitor pricing Analysis')
-
-
-with st.sidebar:
-    selected = option_menu("Main Menu", ["Home", 'Settings'],
-        icons=['house', 'gear'], menu_icon="cast", default_index=1)
-    selected
     
 month_selection = st.selectbox('Select Month', data['Check_in'].dt.month_name().unique())
 bedroom_selection = st.selectbox('Select Number of Bedrooms', sorted(data['Bedrooms'].unique()))
