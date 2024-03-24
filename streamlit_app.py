@@ -110,8 +110,8 @@ percentage_of_total_competitors = (competitors_count / total_count * 100) if tot
 delta_livin_paris = "{:.2f}%".format(percentage_of_total_livin_paris)
 delta_competitors = "{:.2f}%".format(percentage_of_total_competitors)
 
-st.metric(label="LivinParis Apartments", value=livin_paris_count, delta=delta_livin_paris, delta_color="normal",delta_color="off")
-st.metric(label="Competitor Apartments", value=competitors_count, delta=delta_competitors, delta_color="normal",delta_color="off")
+st.metric(label="LivinParis Apartments", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
+st.metric(label="Competitor Apartments", value=competitors_count, delta=delta_competitors, delta_color="off")
 
 
 st.download_button(
