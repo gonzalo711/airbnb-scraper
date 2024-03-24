@@ -104,6 +104,7 @@ with col1:
     month_selection = st.selectbox('Select Month 🗓️', data['Check_in'].dt.month_name().unique())
 bedroom_selection = st.selectbox('Select Number of Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
 
+st.divider()
 filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (data['Bedrooms'] == bedroom_selection)]
 
 livin_paris_count = filtered_data[filtered_data['Livinparis'] == 'Yes'].shape[0]
@@ -130,12 +131,13 @@ with col2:
 with col3:
     st.metric(label="Amount of Competitor Apartments", value=competitors_count, delta=delta_competitors, delta_color="off")
 
+st.divider()
 
 st.download_button(
     label="Download data as CSV",
     data=data.to_csv().encode('utf-8'),
     file_name='consolidated_data.csv',
-    mime='text/csv',
+    mime='text/csv',type="primary"
 )
 
 # Plotly Heatmap for Average Price Per Night
