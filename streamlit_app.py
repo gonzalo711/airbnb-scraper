@@ -1,5 +1,6 @@
 import toml
 from st_files_connection import FilesConnection
+from urllib.parse import urlparse, parse_qs
 import streamlit as st
 import pandas as pd
 import gcsfs
@@ -7,6 +8,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 import matplotlib.dates as mdates
+import numpy as np
 
 # Ensure these libraries are in your requirements.txt
 
@@ -68,7 +70,7 @@ def clean_transform_data(df):
 
 # Load, clean, and transform data
 bucket_name = 'us-central1-airbnbcomposer-b06b3309-bucket/data'
-file_paths = ['airbnb_final_listings_2024_4.csv', 'airbnb_final_listings_2024_5.csv', 'airbnb_final_listings_2024_6.csv']
+file_paths = ['airbnb_final_listings_2024_4.csv', 'airbnb_final_listings_2024_5.csv', 'airbnb_final_listings_2024_6.csv','airbnb_final_listings_2024_7.csv']
 data = load_and_merge_csv(bucket_name, file_paths)
 data = clean_transform_data(data)
 

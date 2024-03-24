@@ -6,3 +6,5 @@ seaborn
 pandas
 matplotlib
 toml
+numpy
+urllib3
