@@ -110,7 +110,7 @@ date_format = DateFormatter("%b %d\n%A")
 ax.xaxis.set_major_formatter(date_format)
 plt.xticks(rotation=45)
 
-
+"""
 filtered_livin_paris = livin_paris_data[(livin_paris_data['Check_in'].dt.month_name() == month_selection) & (livin_paris_data['Bedrooms'] == bedroom_selection)]
 filtered_competitors = competitors_data[(competitors_data['Check_in'].dt.month_name() == month_selection) & (competitors_data['Bedrooms'] == bedroom_selection)]
 
@@ -168,3 +168,4 @@ st.header('Competitors Average Price Per Night')
 fig, ax = plt.subplots()
 sns.heatmap(pivot_table_competitors, annot=True, fmt=".2f", cmap='Blues', ax=ax)
 st.pyplot(fig)
+"""
