@@ -97,9 +97,12 @@ def calculate_percentage_difference(livin_paris_data, competitors_data):
 
 # Streamlit UI for interactive visualization
 st.header('🏡 Airbnb competitor pricing Analysis',divider="rainbow")
-    
-month_selection = st.selectbox('Select Month', data['Check_in'].dt.month_name().unique())
-bedroom_selection = st.selectbox('Select Number of Bedrooms', sorted(data['Bedrooms'].unique()))
+
+st.subheader("Please select the month and number of bedrooms for the benchmark")
+col1, col2= st.columns([0.5, 0.5])
+with col1:
+    month_selection = st.selectbox('Select Month 🗓️', data['Check_in'].dt.month_name().unique())
+bedroom_selection = st.selectbox('Select Number of Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
 
 filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (data['Bedrooms'] == bedroom_selection)]
 
@@ -118,14 +121,14 @@ percentage_of_total_competitors = (competitors_count / total_count * 100) if tot
 delta_livin_paris = "{:.2f}%".format(percentage_of_total_livin_paris)
 delta_competitors = "{:.2f}%".format(percentage_of_total_competitors)
 
-st.subheader("How mych ")
+st.subheader("What is my data sample?")
 col1, col2, col3 = st.columns([0.4, 0.3, 0.3])
 with col1:
     st.metric(label="Total apartments scraped", value=total_count)
 with col2:
-    st.metric(label="LivinParis Apartments", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
+    st.metric(label="Amount of LivinParis apartments", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
 with col3:
-    st.metric(label="Competitor Apartments", value=competitors_count, delta=delta_competitors, delta_color="off")
+    st.metric(label="Amount of Competitor Apartments", value=competitors_count, delta=delta_competitors, delta_color="off")
 
 
 st.download_button(
