@@ -96,6 +96,10 @@ filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (da
 livin_paris_count = filtered_data[filtered_data['Livinparis'] == 'Yes'].shape[0]
 competitors_count = filtered_data[filtered_data['Competitor'] == 'Yes'].shape[0]
 
+
+filtered_livin_paris = filtered_data[filtered_data['Livinparis'] == 'Yes']
+filtered_competitors = filtered_data[filtered_data['Competitor'] == 'Yes']
+
 total_count = filtered_data.shape[0]
 
 percentage_of_total_livin_paris = (livin_paris_count / total_count * 100) if total_count else 0
