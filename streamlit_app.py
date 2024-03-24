@@ -103,7 +103,7 @@ col1, col2= st.columns([0.8, 0.2])
 with col1:
     st.header('🏡 Airbnb competitor pricing Analysis',divider="rainbow")
 with col2:
-    image_path = "images/linvinparis.png"
+    st.image("images/linvinparis.png", caption="Example Image")
 
 st.subheader("Please select the month and number of bedrooms for the benchmark")
 col1, col2= st.columns([0.5, 0.5])
