@@ -96,13 +96,21 @@ def calculate_percentage_difference(livin_paris_data, competitors_data):
 
 
 # Streamlit UI for interactive visualization
-st.header('🏡 Airbnb competitor pricing Analysis',divider="rainbow")
+
+st.set_page_config(layout="wide")
+
+col1, col2= st.columns([0.8, 0.2])
+with col1:
+    st.header('🏡 Airbnb competitor pricing Analysis',divider="rainbow")
+with col2:
+    
 
 st.subheader("Please select the month and number of bedrooms for the benchmark")
 col1, col2= st.columns([0.5, 0.5])
 with col1:
     month_selection = st.selectbox('Select Month 🗓️', data['Check_in'].dt.month_name().unique())
-bedroom_selection = st.selectbox('Select Number of Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
+with col2:
+    bedroom_selection = st.selectbox('Select Number of Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
 
 st.divider()
 filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (data['Bedrooms'] == bedroom_selection)]
