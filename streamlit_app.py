@@ -158,7 +158,7 @@ fig_avg_price = ff.create_annotated_heatmap(
     x=pivot_avg_price.columns.tolist(),
     y=pivot_avg_price.index.tolist(),
     annotation_text=np.around(pivot_avg_price.values, decimals=2).astype(str),
-    colorscale='Viridis',
+    colorscale='amp',
     showscale=True
 )
 fig_avg_price.update_layout(title_text='Average Price Per Night', xaxis_title="Bedrooms", yaxis_title="Interval")
