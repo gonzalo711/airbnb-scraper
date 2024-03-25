@@ -150,6 +150,8 @@ st.download_button(
 
 # Plotly Heatmap for Average Price Per Night
 pivot_avg_price = filtered_data.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
+annotation_text = np.vectorize(lambda x: "€{:.0f}".format(x))(pivot_avg_price.values)
+
 
 st.divider()
 
@@ -157,7 +159,7 @@ fig_avg_price = ff.create_annotated_heatmap(
     z=pivot_avg_price.values,
     x=pivot_avg_price.columns.tolist(),
     y=pivot_avg_price.index.tolist(),
-    annotation_text=np.around(pivot_avg_price.values, decimals=2).astype(str),
+    annotation_text=annotation_text,
     colorscale='amp',
     showscale=True
 )
