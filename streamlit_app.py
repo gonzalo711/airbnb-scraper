@@ -181,7 +181,7 @@ fig_percentage_diff = ff.create_annotated_heatmap(
 fig_percentage_diff.update_layout(title_text='Percentage Difference between LivinParis and Competitors', xaxis_title="Bedrooms", yaxis_title="Interval")
 st.plotly_chart(fig_percentage_diff, use_container_width=True)
 # Pivot table and heatmap visualization
-pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Interval', columns='Bedrooms', aggfunc='mean').fillna(0)
+pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
 plt.figure(figsize=(15, 8))
 ax = sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
 
