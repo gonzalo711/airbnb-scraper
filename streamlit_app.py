@@ -276,4 +276,5 @@ with tabs[0]:
                         fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
         plt.show()"""
 with tabs[1]:
+    
 
