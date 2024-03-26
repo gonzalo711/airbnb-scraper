@@ -180,7 +180,6 @@ st.divider()
 fig_avg_price = ff.create_annotated_heatmap(
     z=pivot_avg_price.values,
     x=pivot_avg_price.index.tolist(),
-    x=pivot_avg_price.index.tolist(),
     y=pivot_avg_price.columns.tolist(),
     annotation_text=annotation_text,
     colorscale='amp',
