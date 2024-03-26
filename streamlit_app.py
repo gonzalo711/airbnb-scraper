@@ -137,20 +137,17 @@ def plot_calendar_heatmap(data, selected_month):
     
 
 # Function to plot the heatmap for the selected month
-def plot_monthly_heatmap(data, year, month):
-    # Filter data for the selected month and year
-    monthly_data = data.loc[data.index.month == month]
-    monthly_data = monthly_data.loc[data.index.year == year]
-    
-    # Plotting using calplot
-    fig, ax = calplot.calplot(
-        monthly_data['average_price'],
-        cmap='YlGn',
-        edgecolor=None,
-        suptitle=f"Average Price Per Night for {year}-{month}"
-    )
-    
-    return fig
+def plot_calendar_heatmap(data, selected_month):
+    # Filter data for the selected month
+    data_month = data[data['Check_in'].dt.month_name() == selected_month]
+
+    # Group by Check_in date and calculate mean price for each date
+    prices_series = data_month.groupby(data_month['Check_in'].dt.date)['Price_per_night'].mean()
+
+    # Generate calendar plot
+    calplot.calplot(prices_series, cmap='YlGn', edgecolor=None, fillcolor='white', linewidth=0,
+                    fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
+    plt.show()
 
 # Streamlit UI for interactive visualization
 
