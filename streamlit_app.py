@@ -276,5 +276,11 @@ with tabs[0]:
                         fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
         plt.show()"""
 with tabs[1]:
-    
+    # Selecting specific columns
+    columns_to_display = ['Title', 'Price_per_night', 'Check_in', 'Check_out', 'URL']
+    filtered_subset = filtered_data[columns_to_display]
+
+    # Displaying the subset DataFrame
+    st.dataframe(filtered_subset)
+
 
