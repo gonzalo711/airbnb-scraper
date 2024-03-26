@@ -32,10 +32,9 @@ fs = gcsfs.GCSFileSystem(token=gcp_credentials)
 
 # Define your bucket and files (ensure the file paths are correct)
 bucket_name = 'us-central1-airbnbcomposer-b06b3309-bucket'
-file_paths = ['data/airbnb_final_listings_2024_4.csv',
-              'data/airbnb_final_listings_2024_5.csv',
-              'data/airbnb_final_listings_2024_6.csv',
-              'data/airbnb_final_listings_2024_7.csv']
+file_paths = ['data/airbnb_final_listings_2024_4_final.csv',
+              'data/airbnb_final_listings_2024_5_final.csv',
+              'data/airbnb_final_listings_2024_6_final.csv']
 
 # Function to load data
 def load_and_merge_csv(bucket_name, file_paths):
@@ -49,25 +48,39 @@ def load_and_merge_csv(bucket_name, file_paths):
 
 #Function to clean the data
 def clean_transform_data(df):
+    df['Price'] = df['Price'].astype(str)
     df['Price'] = df['Price'].str.extract(r'€ (\d+,\d+|\d+)')[0].str.replace(',', '').astype(float)
     
-    # Extract Check_in and Check_out dates from the URL column
-    df['Check_in'] = df['URL'].apply(lambda x: pd.to_datetime(parse_qs(urlparse(x).query).get('check_in', [None])[0]))
-    df['Check_out'] = df['URL'].apply(lambda x: pd.to_datetime(parse_qs(urlparse(x).query).get('check_out', [None])[0]))
+    # Drop rows with NaN values in 'Check_in' and 'Check_out' if present
+    df.dropna(subset=['Check_in', 'Check_out'], inplace=True)
+    
+    # Convert 'Check_in' and 'Check_out' from strings to datetime objects
+    df['Check_in'] = pd.to_datetime(df['Check_in'])
+    df['Check_out'] = pd.to_datetime(df['Check_out'])
+    
+    # Correctly extract Check_in and Check_out dates from the URL column
+    df['Check_in_url'] = df['URL'].apply(lambda x: pd.to_datetime(parse_qs(urlparse(x).query).get('check_in', [None])[0]))
+    df['Check_out_url'] = df['URL'].apply(lambda x: pd.to_datetime(parse_qs(urlparse(x).query).get('check_out', [None])[0]))
+    
+    # Calculate the day of the week for Check_in and Check_out
+    df['Check_in_day'] = df['Check_in_url'].dt.dayofweek
+    df['Check_out_day'] = df['Check_out_url'].dt.dayofweek
     
     # Calculate the number of nights
-    df['number_nights'] = (df['Check_out'] - df['Check_in']).dt.days
+    df['number_nights'] = (df['Check_out_url'] - df['Check_in_url']).dt.days
     
     # Calculate Price per night; handle NaN nights
     df['Price_per_night'] = df.apply(lambda row: row['Price'] / row['number_nights'] if row['number_nights'] > 0 else None, axis=1)
     
-    # Extract day of week for Check-in and Check-out
-    df['Check_in_day'] = df['Check_in'].dt.dayofweek
-    df['Check_out_day'] = df['Check_out'].dt.dayofweek
-    
     # Determine if the period is a Weekend or Weekday stay
     df['Period'] = df.apply(lambda row: 'Weekend' if 5 <= row['Check_in_day'] <= 6 or 5 <= row['Check_out_day'] <= 6 else 'Weekday', axis=1)
+    df['Interva_url'] = df.apply(lambda row: f"{row['Check_in_url'].strftime('%Y-%m-%d')} to {row['Check_out_url'].strftime('%Y-%m-%d')}", axis=1)
     df['Interval'] = df.apply(lambda row: f"{row['Check_in'].strftime('%Y-%m-%d')} to {row['Check_out'].strftime('%Y-%m-%d')}", axis=1)
+
+    # Add the desired_interval column
+    df['desired_interval'] = np.where(df['Interva_url'] == df['Interval'], 'Yes', 'No')
+    
+    # Return the transformed DataFrame
     return df
 
 # Load, clean, and transform data
@@ -113,7 +126,7 @@ with col2:
     bedroom_selection = st.selectbox('Select Number of Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
 
 st.divider()
-filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (data['Bedrooms'] == bedroom_selection)]
+filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (data['Bedrooms'] == bedroom_selection) & (data['desired_interval'] == 'Yes')]
 
 livin_paris_count = filtered_data[filtered_data['Livinparis'] == 'Yes'].shape[0]
 competitors_count = filtered_data[filtered_data['Competitor'] == 'Yes'].shape[0]
@@ -178,7 +191,7 @@ fig_percentage_diff = ff.create_annotated_heatmap(
     showscale=True
 )
 
-fig_percentage_diff.update_layout(title_text='Percentage Difference between LivinParis and Competitors', xaxis_title="Bedrooms", yaxis_title="Interval")
+fig_percentage_diff.update_layout(title_text='Percentage Difference between LivinParis and Competitors', xaxis_title="Interval", yaxis_title="Bedrooms")
 st.plotly_chart(fig_percentage_diff, use_container_width=True)
 # Pivot table and heatmap visualization
 pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
