@@ -128,7 +128,7 @@ with col2:
     st.image("pictures/linvinparis.png")
 
 
-tabs = st.tabs(['Pricing benchmark', 'Explore the dataset'])
+tabs = st.tabs(['Pricing benchmark','Review a certain period', 'Explore the dataset'])
 
 with tabs[0]:
     st.subheader("Please select the month and number of bedrooms")
@@ -235,8 +235,7 @@ with tabs[0]:
     ## Create a figure with a single axes
     fig, ax = plt.subplots()
 
-    ## Tell july to make a plot in a specific axes
-    july.month_plot(dates, data, month=2, date_label=True, ax=ax, colorbar=True)
+    
 
     st.title("📊 A `july.month_plot()` in streamlit")
     ## Tell streamlit to display the figure
@@ -276,11 +275,24 @@ with tabs[0]:
                         fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
         plt.show()"""
 with tabs[1]:
+    st.subheader("Please select a month and then an interval")
+    col1, col2= st.columns([0.5, 0.5])
+    with col1:
+        month_selection = st.selectbox('Select Month 🗓️', data['Check_in'].dt.month_name().unique())
+    
+    filtered_month_data = data[data['Check_in'].dt.month_name() == month_selection]
+
+    # Now, get the unique intervals for the filtered data
+    unique_intervals_for_month = filtered_month_data['Interval'].unique()
+
+    with col2:
+        # Make sure the intervals are sorted before displaying them in the selectbox
+        interval_selection = st.selectbox('Select the interval', sorted(unique_intervals_for_month))
+
+with tabs[2]:
     # Selecting specific columns
     columns_to_display = ['Title', 'Price_per_night', 'Check_in', 'Check_out', 'URL']
     filtered_subset = filtered_data[columns_to_display]
 
     # Displaying the subset DataFrame
     st.dataframe(filtered_subset)
-
-
