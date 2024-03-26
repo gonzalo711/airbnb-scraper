@@ -127,147 +127,153 @@ with col1:
 with col2:
     st.image("pictures/linvinparis.png")
 
-st.subheader("Please select the month and number of bedrooms")
-col1, col2= st.columns([0.5, 0.5])
-with col1:
-    month_selection = st.selectbox('Select Month 🗓️', data['Check_in'].dt.month_name().unique())
-with col2:
-    bedroom_selection = st.selectbox('Select Number of Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
 
-st.divider()
-filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (data['Bedrooms'] == bedroom_selection) & (data['desired_interval'] == 'Yes')]
+tabs = st.tabs(['Pricing benchmark', 'Explore the dataset'])
 
-livin_paris_count = filtered_data[filtered_data['Livinparis'] == 'Yes'].shape[0]
-competitors_count = filtered_data[filtered_data['Competitor'] == 'Yes'].shape[0]
+with tabs[0]:
+    st.subheader("Please select the month and number of bedrooms")
+    col1, col2= st.columns([0.5, 0.5])
+    with col1:
+        month_selection = st.selectbox('Select Month 🗓️', data['Check_in'].dt.month_name().unique())
+    with col2:
+        bedroom_selection = st.selectbox('Select Number of Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
 
+    st.divider()
+    filtered_data = data[(data['Check_in'].dt.month_name() == month_selection) & (data['Bedrooms'] == bedroom_selection) & (data['desired_interval'] == 'Yes')]
 
-filtered_livin_paris = filtered_data[filtered_data['Livinparis'] == 'Yes']
-filtered_competitors = filtered_data[filtered_data['Competitor'] == 'Yes']
-
-total_count = filtered_data.shape[0]
-
-percentage_of_total_livin_paris = (livin_paris_count / total_count * 100) if total_count else 0
-percentage_of_total_competitors = (competitors_count / total_count * 100) if total_count else 0
-
-delta_livin_paris = "{:.2f}%".format(percentage_of_total_livin_paris)
-delta_competitors = "{:.2f}%".format(percentage_of_total_competitors)
-
-st.subheader("What is my data sample?")
-col1, col2, col3 = st.columns([0.4, 0.3, 0.3])
-with col1:
-    st.metric(label="Total apartments scraped for the month", value=total_count)
-with col2:
-    st.metric(label="# of LivinParis apartments scraped for the month", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
-with col3:
-    st.metric(label="# of Competitor Apartments scraped for the month", value=competitors_count, delta=delta_competitors, delta_color="off")
-
-st.divider()
-
-st.download_button(
-    label="Download data as CSV",
-    data=data.to_csv().encode('utf-8'),
-    file_name='consolidated_data.csv',
-    mime='text/csv',type="primary"
-)
-
-# Plotly Heatmap for Average Price Per Night
-pivot_avg_price = filtered_data.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
-annotation_text = np.vectorize(lambda x: "€{:.0f}".format(x))(pivot_avg_price.values)
+    livin_paris_count = filtered_data[filtered_data['Livinparis'] == 'Yes'].shape[0]
+    competitors_count = filtered_data[filtered_data['Competitor'] == 'Yes'].shape[0]
 
 
-st.divider()
+    filtered_livin_paris = filtered_data[filtered_data['Livinparis'] == 'Yes']
+    filtered_competitors = filtered_data[filtered_data['Competitor'] == 'Yes']
 
-fig_avg_price = ff.create_annotated_heatmap(
-    z=pivot_avg_price.values,
-    x=pivot_avg_price.index.tolist(),
-    y=pivot_avg_price.columns.tolist(),
-    annotation_text=annotation_text,
-    colorscale='amp',
-    showscale=True
-)
-fig_avg_price.update_layout(title_text='Average Price Per Night', xaxis_title="Bedrooms", yaxis_title="Interval")
-st.plotly_chart(fig_avg_price, use_container_width=True)
+    total_count = filtered_data.shape[0]
 
-# Plotly Heatmap for Percentage Difference between LivinParis and Competitors
-# Ensure calculate_percentage_difference is correctly implemented
-pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
-fig_percentage_diff = ff.create_annotated_heatmap(
-    z=pivot_percentage_diff.values,
-    x=pivot_percentage_diff.index.tolist(),
-    y=pivot_percentage_diff.columns.tolist(),
-    annotation_text=np.around(pivot_percentage_diff.values, decimals=2).astype(str),
-    colorscale='RdYlGn',
-    showscale=True
-)
+    percentage_of_total_livin_paris = (livin_paris_count / total_count * 100) if total_count else 0
+    percentage_of_total_competitors = (competitors_count / total_count * 100) if total_count else 0
 
-fig_percentage_diff.update_layout(title_text='Percentage Difference between LivinParis and Competitors', xaxis_title="Interval", yaxis_title="Bedrooms")
-st.plotly_chart(fig_percentage_diff, use_container_width=True)
-# Pivot table and heatmap visualization
-pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
-plt.figure(figsize=(15, 8))
-ax = sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
+    delta_livin_paris = "{:.2f}%".format(percentage_of_total_livin_paris)
+    delta_competitors = "{:.2f}%".format(percentage_of_total_competitors)
 
-# Decorate the plot
-ax.set_title('Average Price Per Night Calendar View')
-ax.set_xlabel('Bedrooms')
-ax.set_ylabel('Date')
+    st.subheader("What is my data sample?")
+    col1, col2, col3 = st.columns([0.4, 0.3, 0.3])
+    with col1:
+        st.metric(label="Total apartments scraped for the month", value=total_count)
+    with col2:
+        st.metric(label="# of LivinParis apartments scraped for the month", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
+    with col3:
+        st.metric(label="# of Competitor Apartments scraped for the month", value=competitors_count, delta=delta_competitors, delta_color="off")
 
-# Improve the x-axis labels to show weekdays/weekends
-# You can customize DateFormatter based on how you want to show the dates
-date_format = DateFormatter("%b %d\n%A")
-ax.xaxis.set_major_formatter(date_format)
-plt.xticks(rotation=45)
+    st.divider()
 
-#Testing
-st.title('Airbnb Average Price Calendar View')
+    st.download_button(
+        label="Download data as CSV",
+        data=data.to_csv().encode('utf-8'),
+        file_name='consolidated_data.csv',
+        mime='text/csv',type="primary"
+    )
 
-# Sidebar for user input
-    
-##plot_calendar_heatmap(data, month_selection)
-## Create data
-dates = date_range("2020-01-01", "2020-12-31")
-data = np.random.randint(0, 100, len(dates))
+    # Plotly Heatmap for Average Price Per Night
+    pivot_avg_price = filtered_data.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
+    annotation_text = np.vectorize(lambda x: "€{:.0f}".format(x))(pivot_avg_price.values)
 
-## Create a figure with a single axes
-fig, ax = plt.subplots()
 
-## Tell july to make a plot in a specific axes
-july.month_plot(dates, data, month=2, date_label=True, ax=ax, colorbar=True)
+    st.divider()
 
-st.title("📊 A `july.month_plot()` in streamlit")
-## Tell streamlit to display the figure
-st.pyplot(fig)
-    
-"""def plot_calendar_heatmap(data, selected_month):
-    # Filter data for the selected month
-    data_month = data[data['Check_in'].dt.month_name() == selected_month]
+    fig_avg_price = ff.create_annotated_heatmap(
+        z=pivot_avg_price.values,
+        x=pivot_avg_price.columns.tolist(),
+        y=pivot_avg_price.index.tolist(),
+        annotation_text=annotation_text,
+        colorscale='amp',
+        showscale=True
+    )
+    fig_avg_price.update_layout(title_text='Average Price Per Night', xaxis_title="Bedrooms", yaxis_title="Interval")
+    st.plotly_chart(fig_avg_price, use_container_width=True)
 
-    # Group by the Check_in date and calculate the mean price for each date
-    data_grouped = data_month.groupby(data_month['Check_in'].dt.date)['Price_per_night'].mean()
+    # Plotly Heatmap for Percentage Difference between LivinParis and Competitors
+    # Ensure calculate_percentage_difference is correctly implemented
+    pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
+    fig_percentage_diff = ff.create_annotated_heatmap(
+        z=pivot_percentage_diff.values,
+        x=pivot_percentage_diff.columns.tolist(),
+        y=pivot_percentage_diff.index.tolist(),
+        annotation_text=np.around(pivot_percentage_diff.values, decimals=2).astype(str),
+        colorscale='RdYlGn',
+        showscale=True
+    )
 
-    # Create a pandas Series with dates as the index and the mean price as the value
-    prices_series = pd.Series(data_grouped, index=pd.to_datetime(data_grouped.index))
+    fig_percentage_diff.update_layout(title_text='Percentage Difference between LivinParis and Competitors', xaxis_title="Interval", yaxis_title="Bedrooms")
+    st.plotly_chart(fig_percentage_diff, use_container_width=True)
+    # Pivot table and heatmap visualization
+    pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
+    plt.figure(figsize=(15, 8))
+    ax = sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
 
-    # Generate the calendar plot
-    calplot.calplot(prices_series, cmap='YlGn', edgecolor=None, fillcolor='white', linewidth=0,
-                    fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
-    plt.show()
-    """
-    
+    # Decorate the plot
+    ax.set_title('Average Price Per Night Calendar View')
+    ax.set_xlabel('Bedrooms')
+    ax.set_ylabel('Date')
 
-# Function to plot the heatmap for the selected month
-"""def plot_calendar_heatmap(data, selected_month):
-    # Filter data for the selected month
-    data_month = data[data['Check_in'].dt.month_name() == selected_month]
-    
-    # Ensure 'Check_in' is the index and is of datetime type
-    data_month.set_index('Check_in', inplace=True)
-    data_month.index = pd.to_datetime(data_month.index)
-    
-    # Group by Check_in date and calculate the mean price for each date
-    data_grouped = data_month['Price_per_night'].resample('D').mean()
-    
-    # Generate the calendar plot
-    calplot.calplot(data_grouped, cmap='YlGn', edgecolor=None, linewidth=0,
-                    fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
-    plt.show()"""
+    # Improve the x-axis labels to show weekdays/weekends
+    # You can customize DateFormatter based on how you want to show the dates
+    date_format = DateFormatter("%b %d\n%A")
+    ax.xaxis.set_major_formatter(date_format)
+    plt.xticks(rotation=45)
+
+    #Testing
+    st.title('Airbnb Average Price Calendar View')
+
+    # Sidebar for user input
+        
+    ##plot_calendar_heatmap(data, month_selection)
+    ## Create data
+    dates = date_range("2020-01-01", "2020-12-31")
+    data = np.random.randint(0, 100, len(dates))
+
+    ## Create a figure with a single axes
+    fig, ax = plt.subplots()
+
+    ## Tell july to make a plot in a specific axes
+    july.month_plot(dates, data, month=2, date_label=True, ax=ax, colorbar=True)
+
+    st.title("📊 A `july.month_plot()` in streamlit")
+    ## Tell streamlit to display the figure
+    st.pyplot(fig)
+        
+    """def plot_calendar_heatmap(data, selected_month):
+        # Filter data for the selected month
+        data_month = data[data['Check_in'].dt.month_name() == selected_month]
+
+        # Group by the Check_in date and calculate the mean price for each date
+        data_grouped = data_month.groupby(data_month['Check_in'].dt.date)['Price_per_night'].mean()
+
+        # Create a pandas Series with dates as the index and the mean price as the value
+        prices_series = pd.Series(data_grouped, index=pd.to_datetime(data_grouped.index))
+
+        # Generate the calendar plot
+        calplot.calplot(prices_series, cmap='YlGn', edgecolor=None, fillcolor='white', linewidth=0,
+                        fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
+        plt.show()
+        """
+        
+
+    # Function to plot the heatmap for the selected month
+    """def plot_calendar_heatmap(data, selected_month):
+        # Filter data for the selected month
+        data_month = data[data['Check_in'].dt.month_name() == selected_month]
+        
+        # Ensure 'Check_in' is the index and is of datetime type
+        data_month.set_index('Check_in', inplace=True)
+        data_month.index = pd.to_datetime(data_month.index)
+        
+        # Group by Check_in date and calculate the mean price for each date
+        data_grouped = data_month['Price_per_night'].resample('D').mean()
+        
+        # Generate the calendar plot
+        calplot.calplot(data_grouped, cmap='YlGn', edgecolor=None, linewidth=0,
+                        fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
+        plt.show()"""
+with tabs[1]:
+
