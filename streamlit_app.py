@@ -222,9 +222,6 @@ plt.xticks(rotation=45)
 st.title('Airbnb Average Price Calendar View')
 
 # Sidebar for user input
-year = st.sidebar.selectbox('Select Year', df.index.year.unique())
-month = st.sidebar.selectbox('Select Month', df.index.month.unique())
-
     
 ##plot_calendar_heatmap(data, month_selection)
 ## Create data
