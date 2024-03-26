@@ -113,39 +113,7 @@ def calculate_percentage_difference(livin_paris_data, competitors_data):
     
     return percentage_difference_pivot
     
-"""def plot_calendar_heatmap(data, selected_month):
-    # Filter data for the selected month
-    data_month = data[data['Check_in'].dt.month_name() == selected_month]
 
-    # Group by the Check_in date and calculate the mean price for each date
-    data_grouped = data_month.groupby(data_month['Check_in'].dt.date)['Price_per_night'].mean()
-
-    # Create a pandas Series with dates as the index and the mean price as the value
-    prices_series = pd.Series(data_grouped, index=pd.to_datetime(data_grouped.index))
-
-    # Generate the calendar plot
-    calplot.calplot(prices_series, cmap='YlGn', edgecolor=None, fillcolor='white', linewidth=0,
-                    fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
-    plt.show()
-    """
-    
-
-# Function to plot the heatmap for the selected month
-"""def plot_calendar_heatmap(data, selected_month):
-    # Filter data for the selected month
-    data_month = data[data['Check_in'].dt.month_name() == selected_month]
-    
-    # Ensure 'Check_in' is the index and is of datetime type
-    data_month.set_index('Check_in', inplace=True)
-    data_month.index = pd.to_datetime(data_month.index)
-    
-    # Group by Check_in date and calculate the mean price for each date
-    data_grouped = data_month['Price_per_night'].resample('D').mean()
-    
-    # Generate the calendar plot
-    calplot.calplot(data_grouped, cmap='YlGn', edgecolor=None, linewidth=0,
-                    fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
-    plt.show()"""
 
 # Streamlit UI for interactive visualization
 
@@ -153,11 +121,13 @@ st.set_page_config(layout="wide")
 
 col1, col2= st.columns([0.8, 0.2])
 with col1:
-    st.header('🏡 Airbnb competitor pricing Analysis',divider="rainbow")
+    st.header('🏡 Airbnb competitor pricing Analysis')
+    
+    st.markdown("<hr style='border-top: 2px solid red; margin-top: 20px; margin-bottom: 20px'/>", unsafe_allow_html=True))
 with col2:
     st.image("pictures/linvinparis.png")
 
-st.subheader("Please select the month and number of bedrooms for the benchmark")
+st.subheader("Please select the month and number of bedrooms")
 col1, col2= st.columns([0.5, 0.5])
 with col1:
     month_selection = st.selectbox('Select Month 🗓️', data['Check_in'].dt.month_name().unique())
@@ -185,11 +155,11 @@ delta_competitors = "{:.2f}%".format(percentage_of_total_competitors)
 st.subheader("What is my data sample?")
 col1, col2, col3 = st.columns([0.4, 0.3, 0.3])
 with col1:
-    st.metric(label="Total apartments scraped", value=total_count)
+    st.metric(label="Total apartments scraped for the month", value=total_count)
 with col2:
-    st.metric(label="Amount of LivinParis apartments", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
+    st.metric(label="# of LivinParis apartments scraped for the month", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
 with col3:
-    st.metric(label="Amount of Competitor Apartments", value=competitors_count, delta=delta_competitors, delta_color="off")
+    st.metric(label="# of Competitor Apartments scraped for the month", value=competitors_count, delta=delta_competitors, delta_color="off")
 
 st.divider()
 
@@ -271,3 +241,36 @@ st.title("📊 A `july.month_plot()` in streamlit")
 ## Tell streamlit to display the figure
 st.pyplot(fig)
     
+"""def plot_calendar_heatmap(data, selected_month):
+    # Filter data for the selected month
+    data_month = data[data['Check_in'].dt.month_name() == selected_month]
+
+    # Group by the Check_in date and calculate the mean price for each date
+    data_grouped = data_month.groupby(data_month['Check_in'].dt.date)['Price_per_night'].mean()
+
+    # Create a pandas Series with dates as the index and the mean price as the value
+    prices_series = pd.Series(data_grouped, index=pd.to_datetime(data_grouped.index))
+
+    # Generate the calendar plot
+    calplot.calplot(prices_series, cmap='YlGn', edgecolor=None, fillcolor='white', linewidth=0,
+                    fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
+    plt.show()
+    """
+    
+
+# Function to plot the heatmap for the selected month
+"""def plot_calendar_heatmap(data, selected_month):
+    # Filter data for the selected month
+    data_month = data[data['Check_in'].dt.month_name() == selected_month]
+    
+    # Ensure 'Check_in' is the index and is of datetime type
+    data_month.set_index('Check_in', inplace=True)
+    data_month.index = pd.to_datetime(data_month.index)
+    
+    # Group by Check_in date and calculate the mean price for each date
+    data_grouped = data_month['Price_per_night'].resample('D').mean()
+    
+    # Generate the calendar plot
+    calplot.calplot(data_grouped, cmap='YlGn', edgecolor=None, linewidth=0,
+                    fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
+    plt.show()"""
