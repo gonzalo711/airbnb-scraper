@@ -140,12 +140,16 @@ def plot_calendar_heatmap(data, selected_month):
 def plot_calendar_heatmap(data, selected_month):
     # Filter data for the selected month
     data_month = data[data['Check_in'].dt.month_name() == selected_month]
-
-    # Group by Check_in date and calculate mean price for each date
-    prices_series = data_month.groupby(data_month['Check_in'].dt.date)['Price_per_night'].mean()
-
-    # Generate calendar plot
-    calplot.calplot(prices_series, cmap='YlGn', edgecolor=None, fillcolor='white', linewidth=0,
+    
+    # Ensure 'Check_in' is the index and is of datetime type
+    data_month.set_index('Check_in', inplace=True)
+    data_month.index = pd.to_datetime(data_month.index)
+    
+    # Group by Check_in date and calculate the mean price for each date
+    data_grouped = data_month['Price_per_night'].resample('D').mean()
+    
+    # Generate the calendar plot
+    calplot.calplot(data_grouped, cmap='YlGn', edgecolor=None, linewidth=0,
                     fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
     plt.show()
 
