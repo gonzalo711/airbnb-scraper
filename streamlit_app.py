@@ -137,7 +137,7 @@ def plot_calendar_heatmap(data, selected_month):
     
 
 # Function to plot the heatmap for the selected month
-def plot_calendar_heatmap(data, selected_month):
+"""def plot_calendar_heatmap(data, selected_month):
     # Filter data for the selected month
     data_month = data[data['Check_in'].dt.month_name() == selected_month]
     
@@ -151,7 +151,7 @@ def plot_calendar_heatmap(data, selected_month):
     # Generate the calendar plot
     calplot.calplot(data_grouped, cmap='YlGn', edgecolor=None, linewidth=0,
                     fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
-    plt.show()
+    plt.show()"""
 
 # Streamlit UI for interactive visualization
 
@@ -266,6 +266,6 @@ if st.button('Show Heatmap'):
     fig = plot_monthly_heatmap(df, year, month)
     st.pyplot(fig)
     
-plot_calendar_heatmap(data, month_selection)
+##plot_calendar_heatmap(data, month_selection)
 
     
