@@ -86,7 +86,7 @@ def clean_transform_data(df):
 
 # Load, clean, and transform data
 bucket_name = 'us-central1-airbnbcomposer-b06b3309-bucket/data'
-file_paths = ['airbnb_final_listings_2024_4.csv', 'airbnb_final_listings_2024_5.csv', 'airbnb_final_listings_2024_6.csv','airbnb_final_listings_2024_7.csv']
+file_paths = ['airbnb_final_listings_2024_4_final.csv', 'airbnb_final_listings_2024_5_final.csv', 'airbnb_final_listings_2024_6_final.csv']
 data = load_and_merge_csv(bucket_name, file_paths)
 data = clean_transform_data(data)
 
