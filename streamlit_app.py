@@ -123,7 +123,7 @@ col1, col2= st.columns([0.8, 0.2])
 with col1:
     st.header('🏡 Airbnb competitor pricing Analysis')
     
-    st.markdown("<hr style='border-top: 2px solid red; margin-top: 20px; margin-bottom: 20px'/>", unsafe_allow_html=True))
+    st.markdown("<hr style='border-top: 2px solid red; margin-top: 20px; margin-bottom: 20px'/>", unsafe_allow_html=True)
 with col2:
     st.image("pictures/linvinparis.png")
 
