@@ -179,8 +179,9 @@ st.divider()
 
 fig_avg_price = ff.create_annotated_heatmap(
     z=pivot_avg_price.values,
-    x=pivot_avg_price.columns.tolist(),
-    y=pivot_avg_price.index.tolist(),
+    x=pivot_avg_price.index.tolist(),
+    x=pivot_avg_price.index.tolist(),
+    y=pivot_avg_price.columns.tolist(),
     annotation_text=annotation_text,
     colorscale='amp',
     showscale=True
@@ -193,8 +194,8 @@ st.plotly_chart(fig_avg_price, use_container_width=True)
 pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
 fig_percentage_diff = ff.create_annotated_heatmap(
     z=pivot_percentage_diff.values,
-    x=pivot_percentage_diff.columns.tolist(),
-    y=pivot_percentage_diff.index.tolist(),
+    x=pivot_percentage_diff.index.tolist(),
+    y=pivot_percentage_diff.columns.tolist(),
     annotation_text=np.around(pivot_percentage_diff.values, decimals=2).astype(str),
     colorscale='RdYlGn',
     showscale=True
