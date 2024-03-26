@@ -10,6 +10,8 @@ from matplotlib.dates import DateFormatter
 import matplotlib.dates as mdates
 import numpy as np
 import plotly.figure_factory as ff
+import calplot
+from pandas.tseries.offsets import MonthEnd
 
 # Ensure these libraries are in your requirements.txt
 
@@ -45,6 +47,15 @@ def load_and_merge_csv(bucket_name, file_paths):
             all_data = pd.concat([all_data, df], ignore_index=True)
     all_data.to_csv('final.csv', index=False)
     return all_data
+    
+    
+df = pd.DataFrame({
+    'date': pd.date_range(start='2024-01-01', end='2024-12-31', freq='D'),
+    'average_price': np.random.rand(365) * 200  # Random data for demonstration
+})
+df['date'] = pd.to_datetime(df['date'])  # Ensure the date column is datetime
+df.set_index('date', inplace=True)  # Set the date column as the index
+
 
 #Function to clean the data
 def clean_transform_data(df):
@@ -108,6 +119,21 @@ def calculate_percentage_difference(livin_paris_data, competitors_data):
     return percentage_difference_pivot
 
 
+# Function to plot the heatmap for the selected month
+def plot_monthly_heatmap(data, year, month):
+    # Filter data for the selected month and year
+    monthly_data = data.loc[data.index.month == month]
+    monthly_data = monthly_data.loc[data.index.year == year]
+    
+    # Plotting using calplot
+    fig, ax = calplot.calplot(
+        monthly_data['average_price'],
+        cmap='YlGn',
+        edgecolor=None,
+        suptitle=f"Average Price Per Night for {year}-{month}"
+    )
+    
+    return fig
 
 # Streamlit UI for interactive visualization
 
@@ -209,3 +235,15 @@ ax.set_ylabel('Date')
 date_format = DateFormatter("%b %d\n%A")
 ax.xaxis.set_major_formatter(date_format)
 plt.xticks(rotation=45)
+
+#Testing
+st.title('Airbnb Average Price Calendar View')
+
+# Sidebar for user input
+year = st.sidebar.selectbox('Select Year', df.index.year.unique())
+month = st.sidebar.selectbox('Select Month', df.index.month.unique())
+
+# Button to show heatmap
+if st.button('Show Heatmap'):
+    fig = plot_monthly_heatmap(df, year, month)
+    st.pyplot(fig)

@@ -9,3 +9,4 @@ toml
 numpy
 urllib3
 plotly==5.5.0
+calplot
