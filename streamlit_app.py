@@ -11,7 +11,8 @@ import matplotlib.dates as mdates
 import numpy as np
 import plotly.figure_factory as ff
 import calplot
-from pandas.tseries.offsets import MonthEnd
+import matplotlib.dates as mdates
+from pandas.tseries.offsets import MonthBegin, MonthEnd
 
 # Ensure these libraries are in your requirements.txt
 
@@ -117,7 +118,23 @@ def calculate_percentage_difference(livin_paris_data, competitors_data):
     percentage_difference_pivot = combined.pivot_table(index='Interval', values='Percentage Difference', aggfunc='mean').fillna(0)
     
     return percentage_difference_pivot
+    
+def plot_calendar_heatmap(data, selected_month):
+    # Filter data for the selected month
+    data_month = data[data['Check_in'].dt.month_name() == selected_month]
 
+    # Group by the Check_in date and calculate the mean price for each date
+    data_grouped = data_month.groupby(data_month['Check_in'].dt.date)['Price_per_night'].mean()
+
+    # Create a pandas Series with dates as the index and the mean price as the value
+    prices_series = pd.Series(data_grouped, index=pd.to_datetime(data_grouped.index))
+
+    # Generate the calendar plot
+    calplot.calplot(prices_series, cmap='YlGn', edgecolor=None, fillcolor='white', linewidth=0,
+                    fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
+    plt.show()
+    
+    
 
 # Function to plot the heatmap for the selected month
 def plot_monthly_heatmap(data, year, month):
@@ -247,3 +264,7 @@ month = st.sidebar.selectbox('Select Month', df.index.month.unique())
 if st.button('Show Heatmap'):
     fig = plot_monthly_heatmap(df, year, month)
     st.pyplot(fig)
+    
+plot_calendar_heatmap(data, month_selection)
+
+    
