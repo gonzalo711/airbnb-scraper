@@ -13,6 +13,8 @@ import plotly.figure_factory as ff
 import calplot
 import matplotlib.dates as mdates
 from pandas.tseries.offsets import MonthBegin, MonthEnd
+import july
+from july.utils import date_range
 
 # Ensure these libraries are in your requirements.txt
 
@@ -48,14 +50,6 @@ def load_and_merge_csv(bucket_name, file_paths):
             all_data = pd.concat([all_data, df], ignore_index=True)
     all_data.to_csv('final.csv', index=False)
     return all_data
-    
-    
-df = pd.DataFrame({
-    'date': pd.date_range(start='2024-01-01', end='2024-12-31', freq='D'),
-    'average_price': np.random.rand(365) * 200  # Random data for demonstration
-})
-df['date'] = pd.to_datetime(df['date'])  # Ensure the date column is datetime
-df.set_index('date', inplace=True)  # Set the date column as the index
 
 
 #Function to clean the data
@@ -119,7 +113,7 @@ def calculate_percentage_difference(livin_paris_data, competitors_data):
     
     return percentage_difference_pivot
     
-def plot_calendar_heatmap(data, selected_month):
+"""def plot_calendar_heatmap(data, selected_month):
     # Filter data for the selected month
     data_month = data[data['Check_in'].dt.month_name() == selected_month]
 
@@ -133,7 +127,7 @@ def plot_calendar_heatmap(data, selected_month):
     calplot.calplot(prices_series, cmap='YlGn', edgecolor=None, fillcolor='white', linewidth=0,
                     fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
     plt.show()
-    
+    """
     
 
 # Function to plot the heatmap for the selected month
@@ -261,11 +255,19 @@ st.title('Airbnb Average Price Calendar View')
 year = st.sidebar.selectbox('Select Year', df.index.year.unique())
 month = st.sidebar.selectbox('Select Month', df.index.month.unique())
 
-# Button to show heatmap
-if st.button('Show Heatmap'):
-    fig = plot_monthly_heatmap(df, year, month)
-    st.pyplot(fig)
     
 ##plot_calendar_heatmap(data, month_selection)
+## Create data
+dates = date_range("2020-01-01", "2020-12-31")
+data = np.random.randint(0, 100, len(dates))
 
+## Create a figure with a single axes
+fig, ax = plt.subplots()
+
+## Tell july to make a plot in a specific axes
+july.month_plot(dates, data, month=2, date_label=True, ax=ax, colorbar=True)
+
+st.title("📊 A `july.month_plot()` in streamlit")
+## Tell streamlit to display the figure
+st.pyplot(fig)
     
