@@ -52,11 +52,12 @@ def clean_transform_data(df):
     df['Price'] = df['Price'].str.extract(r'€ (\d+,\d+|\d+)')[0].str.replace(',', '').astype(float)
     
     # Drop rows with NaN values in 'Check_in' and 'Check_out' if present
-    df.dropna(subset=['Check_in', 'Check_out'], inplace=True)
-    
+       
     # Convert 'Check_in' and 'Check_out' from strings to datetime objects
     df['Check_in'] = pd.to_datetime(df['Check_in'])
     df['Check_out'] = pd.to_datetime(df['Check_out'])
+    
+    df.dropna(subset=['Check_in', 'Check_out'], inplace=True)
     
     # Correctly extract Check_in and Check_out dates from the URL column
     df['Check_in_url'] = df['URL'].apply(lambda x: pd.to_datetime(parse_qs(urlparse(x).query).get('check_in', [None])[0]))
