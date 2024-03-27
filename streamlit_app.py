@@ -161,9 +161,9 @@ with tabs[0]:
     with col1:
         st.metric(label="Total apartments scraped for the month", value=total_count)
     with col2:
-        st.metric(label="# of LivinParis apartments scraped for the month", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
+        st.metric(label="Number of LivinParis apartments scraped for the month", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
     with col3:
-        st.metric(label="# of Competitor Apartments scraped for the month", value=competitors_count, delta=delta_competitors, delta_color="off")
+        st.metric(label="Number of Competitor Apartments scraped for the month", value=competitors_count, delta=delta_competitors, delta_color="off")
 
     st.divider()
 
@@ -189,7 +189,7 @@ with tabs[0]:
         colorscale='amp',
         showscale=True
     )
-    fig_avg_price.update_layout(title_text='Average Price Per Night', xaxis_title="Bedrooms", yaxis_title="Interval")
+    fig_avg_price.update_layout(title_text='Competitor Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_avg_price, use_container_width=True)
 
     # Plotly Heatmap for Percentage Difference between LivinParis and Competitors
@@ -274,6 +274,36 @@ with tabs[0]:
         calplot.calplot(data_grouped, cmap='YlGn', edgecolor=None, linewidth=0,
                         fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
         plt.show()"""
+    
+    #Net type of graphic
+    
+    # Plotly Heatmap for Average Price Per Night
+    pivot_avg_price = filtered_data.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
+    annotation_text = np.vectorize(lambda x: "€{:.0f}".format(x))(pivot_avg_price.values)
+
+    fig_avg_price = ff.create_annotated_heatmap(
+        z=pivot_avg_price.values,
+        x=list(range(len(combined_labels))),  # Use integer indices for x
+        y=pivot_avg_price.index.tolist(),
+        annotation_text=annotation_text,
+        colorscale='amp',
+        showscale=True
+    )
+
+    # Now update the x-axis to use the combined labels
+    fig_avg_price.update_layout(
+        xaxis=dict(
+            tickmode='array',
+            tickvals=list(range(len(combined_labels))),
+            ticktext=combined_labels
+        ),
+        xaxis_title="Interval",
+        yaxis_title="Bedrooms"
+    )
+
+    st.plotly_chart(fig_avg_price, use_container_width=True)
+    
+    
 with tabs[1]:
     st.subheader("Please select a month and then an interval")
     col1, col2= st.columns([0.5, 0.5])
