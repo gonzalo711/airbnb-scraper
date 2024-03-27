@@ -213,8 +213,8 @@ with tabs[0]:
     pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
     fig_percentage_diff = ff.create_annotated_heatmap(
         z=pivot_percentage_diff.values,
-        x=pivot_percentage_diff.index.tolist(),
-        y=pivot_percentage_diff.columns.tolist(),
+        x=pivot_percentage_diff.columns.tolist(),
+        y=pivot_percentage_diff.index.tolist(),
         annotation_text=np.around(pivot_percentage_diff.values, decimals=2).astype(str),
         colorscale='RdYlGn',
         showscale=True
