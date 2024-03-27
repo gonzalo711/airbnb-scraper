@@ -300,7 +300,7 @@ with tabs[1]:
     filtered_data_month = filtered_data[filtered_data['Check_in'].dt.month_name() == month_selection]
     intervals_in_month = filtered_data_month['Interval'].unique()
     
-    st.subheader("Please select an interval")
+    st.subheader("Pick an interval to check out the competitors 👀")
     interval_selection = st.selectbox('Select Interval', intervals_in_month)
     
     filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
@@ -308,10 +308,20 @@ with tabs[1]:
         
     filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
     
-    columns_to_display = ['Title', 'Price_per_night', 'Check_in', 'Check_out', 'URL']
+    columns_to_display = ['Title', 'Price_per_night','Review_rating', 'URL']
     df_display = filtered_data_interval[columns_to_display]
     
-    st.dataframe(df_display)
+    col1, col2= st.columns([0.8, 0.2])
+    with col1:
+    
+        st.dataframe(df_display)
+        
+    with col2:
+        competitors_interval_count = filtered_data_interval[filtered_data['Competitor'] == 'Yes'].shape[0]
+        livinparis_interval_count = filtered_data_interval[filtered_data['Livinparis'] == 'Yes'].shape[0]
+        st.metric(label="Number of competitors scraped", value=competitors_interval_count)
+        st.metric(label="Number of LivinParis appartments", value=competitors_count, delta=delta_competitors, delta_color="off")
+        
 
 
 with tabs[2]:
