@@ -18,7 +18,6 @@ from july.utils import date_range
 from calendar import month_abbr
 from datetime import datetime
 
-
 # Ensure these libraries are in your requirements.txt
 
 # Load GCP credentials directly from Streamlit's secrets
@@ -176,6 +175,9 @@ with tabs[0]:
         file_name='consolidated_data.csv',
         mime='text/csv',type="primary"
     )
+    
+    
+
 
     with st.expander('Report month'):
         this_year = datetime.now().year
@@ -212,7 +214,7 @@ with tabs[0]:
     fig_percentage_diff = ff.create_annotated_heatmap(
         z=pivot_percentage_diff.values,
         x=pivot_percentage_diff.index.tolist(),
-        y=pivot_percentage_diff.columns.tolist()tolist(),
+        y=pivot_percentage_diff.columns.tolist(),
         annotation_text=np.around(pivot_percentage_diff.values, decimals=2).astype(str),
         colorscale='RdYlGn',
         showscale=True
