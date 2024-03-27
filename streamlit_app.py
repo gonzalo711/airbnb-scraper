@@ -299,14 +299,13 @@ with tabs[1]:
     
     filtered_data_month = filtered_data[filtered_data['Check_in'].dt.month_name() == month_selection]
     intervals_in_month = filtered_data_month['Interval'].unique()
+    
+    st.subheader("Please select an interval")
     interval_selection = st.selectbox('Select Interval', intervals_in_month)
     
     filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
     
-    st.subheader("Please select an interval")
-    
-    interval_selection = st.selectbox('Select Interval', intervals_in_month)
-    
+        
     filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
     
     df_display = filtered_data_interval[columns_to_display]
