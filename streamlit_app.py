@@ -225,22 +225,19 @@ with tabs[0]:
 
     # Create the annotated heatmap
     fig_percentage_diff = ff.create_annotated_heatmap(
-        z=pivot_percentage_diff.values,
-        x=pivot_percentage_diff.columns.tolist(),
-        y=pivot_percentage_diff.index.tolist(),
-        annotation_text=np.around(pivot_percentage_diff.values, decimals=2).astype(str),
-        colorscale='RdYlGn',
-        showscale=True
+    z=pivot_percentage_diff.values,
+    x=pivot_percentage_diff.columns,
+    y=pivot_percentage_diff.index,
+    colorscale='RdYlGn',
+    showscale=True
     )
 
-    # Update layout
     fig_percentage_diff.update_layout(
-        title_text='Difference in pricing between LivinParis and Competitors',
-        xaxis_title="Interval",
-        yaxis_title="Bedrooms"
+        title='Difference in pricing between LivinParis and Competitors',
+        xaxis=dict(title='Interval', tickangle=-45),
+        yaxis=dict(title='Bedrooms')
     )
 
-    # Display the heatmap
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
 
     # Improve the x-axis labels to show weekdays/weekends
