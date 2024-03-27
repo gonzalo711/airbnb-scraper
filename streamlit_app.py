@@ -220,30 +220,6 @@ with tabs[0]:
     fig_avg_price.update_layout(title_text='Competitor Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_avg_price, use_container_width=True)
 
-     """lotly Heatmap for Percentage Difference between LivinParis and Competitors
-        Ensure calculate_percentage_difference is correctly implemented
-        pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
-        fig_percentage_diff = ff.create_annotated_heatmap(
-            z=pivot_percentage_diff.values,
-            x=pivot_percentage_diff.columns.tolist(),
-            y=pivot_percentage_diff.index.tolist(),
-            annotation_text=np.around(pivot_percentage_diff.values, decimals=2).astype(str),
-            colorscale='RdYlGn',
-            showscale=True
-        )
-
-        fig_percentage_diff.update_layout(title_text='Difference in pricing between LivinParis and Competitors', xaxis_title="Interval", yaxis_title="Bedrooms")
-        st.plotly_chart(fig_percentage_diff, use_container_width=True)
-        # Pivot table and heatmap visualization
-        pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
-        plt.figure(figsize=(15, 8))
-        ax = sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
-
-        # Decorate the plot
-        ax.set_title('Average Price Per Night Calendar View')
-        ax.set_xlabel('Bedrooms')
-        ax.set_ylabel('Date')""""
-
     pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
     pivot_percentage_diff = pivot_percentage_diff.pivot('Bedrooms', 'Interval', 'Percentage Difference')
 
