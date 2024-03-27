@@ -301,14 +301,10 @@ with tabs[1]:
     intervals_in_month = filtered_data_month['Interval'].unique()
     interval_selection = st.selectbox('Select Interval', intervals_in_month)
     
-    
     filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
-    
     
     st.subheader("Please select an interval")
     
-    
-            month_selection
     interval_selection = st.selectbox('Select Interval', intervals_in_month)
     
     filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
