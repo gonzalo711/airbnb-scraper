@@ -129,10 +129,11 @@ with col1:
 with col2:
     st.image("pictures/linvinparis.png")
 
-
+st.write("#")
 tabs = st.tabs(['Pricing benchmark','Review a certain period', 'Explore the dataset'])
 
 with tabs[0]:
+    st.write("#")
     st.subheader("Please select the month and number of bedrooms")
     col1, col2= st.columns([0.5, 0.5])
     with col1:
@@ -295,19 +296,27 @@ with tabs[0]:
     
     
 with tabs[1]:
-    st.subheader("Please select a month and then an interval")
-    col1, col2= st.columns([0.5, 0.5])
-    with col1:
-        month_selection = st.selectbox('Select Month 🗓️', data['Check_in'].dt.month_name().unique())
     
-    filtered_month_data = data[data['Check_in'].dt.month_name() == month_selection]
+    filtered_data_month = filtered_data[filtered_data['Check_in'].dt.month_name() == month_selection]
+    intervals_in_month = filtered_data_month['Interval'].unique()
+    interval_selection = st.selectbox('Select Interval', intervals_in_month)
+    
+    
+    filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
+    
+    
+    st.subheader("Please select an interval")
+    
+    
+            month_selection
+    interval_selection = st.selectbox('Select Interval', intervals_in_month)
+    
+    filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
+    
+    df_display = filtered_data_interval[columns_to_display]
+    
+    st.dataframe(df_display)
 
-    # Now, get the unique intervals for the filtered data
-    unique_intervals_for_month = filtered_month_data['Interval'].unique()
-
-    with col2:
-        # Make sure the intervals are sorted before displaying them in the selectbox
-        interval_selection = st.selectbox('Select the interval', sorted(unique_intervals_for_month))
 
 with tabs[2]:
     # Selecting specific columns
