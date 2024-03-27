@@ -334,7 +334,7 @@ with tabs[1]:
         competitors_interval_count = filtered_data_interval[filtered_data['Competitor'] == 'Yes'].shape[0]
         livinparis_interval_count = filtered_data_interval[filtered_data['Livinparis'] == 'Yes'].shape[0]
         st.metric(label="Number of competitors scraped", value=competitors_interval_count)
-        st.metric(label="Number of LivinParis appartments", livinparis_interval_count)
+        st.metric(label="Number of LivinParis appartments", value=livinparis_interval_count)
         
 
 
