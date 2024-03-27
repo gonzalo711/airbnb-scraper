@@ -89,6 +89,13 @@ def clean_transform_data(df):
     # Add the desired_interval column
     df['desired_interval'] = np.where(df['Interva_url'] == df['Interval'], 'Yes', 'No')
     
+    #Check reviews and rating
+    
+    df[['Rating', 'Number_of_reviews']] = df['Review_rating'].str.extract(r'(\d+\.\d+|New)\s*(\(\d+\)|New)?')
+    
+    # Clean up the 'Number_of_reviews' by removing parentheses
+    df['Number_of_reviews'] = df['Number_of_reviews'].str.replace(r'[()]', '', regex=True)
+    
     # Return the transformed DataFrame
     return df
 
@@ -114,6 +121,10 @@ def calculate_percentage_difference(livin_paris_data, competitors_data):
     percentage_difference_pivot = combined.pivot_table(index='Interval', values='Percentage Difference', aggfunc='mean').fillna(0)
     
     return percentage_difference_pivot
+    
+def make_clickable(url):
+    # This function returns an HTML anchor tag with the URL as the hyperlink target
+    return f'<a target="_blank" href="{url}">{url}</a>'
     
 
 
@@ -304,23 +315,26 @@ with tabs[1]:
     interval_selection = st.selectbox('Select Interval', intervals_in_month)
     
     filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
+    columns_to_display = ['Title', 'Price_per_night', 'Review_rating', 'URL']
+    df_display = filtered_data_interval[columns_to_display].copy()
+
+    # Convert URLs to clickable links
+    df_display['URL'] = df_display['URL'].apply(make_clickable)
+
+    st.write('Competitor Data')
+    st.markdown(df_display.to_html(escape=False), unsafe_allow_html=True)
     
-        
-    filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
+    col1, col2 = st.columns([0.8, 0.2])
     
-    columns_to_display = ['Title', 'Price_per_night','Review_rating', 'URL']
-    df_display = filtered_data_interval[columns_to_display]
-    
-    col1, col2= st.columns([0.8, 0.2])
     with col1:
+        st.dataframe(df_display.style.format({'URL': make_clickable}), height=300)  # adjust height as needed
     
-        st.dataframe(df_display)
         
     with col2:
         competitors_interval_count = filtered_data_interval[filtered_data['Competitor'] == 'Yes'].shape[0]
         livinparis_interval_count = filtered_data_interval[filtered_data['Livinparis'] == 'Yes'].shape[0]
         st.metric(label="Number of competitors scraped", value=competitors_interval_count)
-        st.metric(label="Number of LivinParis appartments", value=competitors_count, delta=delta_competitors, delta_color="off")
+        st.metric(label="Number of LivinParis appartments", livinparis_interval_count)
         
 
 
