@@ -308,6 +308,7 @@ with tabs[1]:
         
     filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
     
+    columns_to_display = ['Title', 'Price_per_night', 'Check_in', 'Check_out', 'URL']
     df_display = filtered_data_interval[columns_to_display]
     
     st.dataframe(df_display)
