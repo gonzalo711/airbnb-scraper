@@ -15,6 +15,9 @@ import matplotlib.dates as mdates
 from pandas.tseries.offsets import MonthBegin, MonthEnd
 import july
 from july.utils import date_range
+from calendar import month_abbr
+from datetime import datetime
+
 
 # Ensure these libraries are in your requirements.txt
 
@@ -174,6 +177,17 @@ with tabs[0]:
         mime='text/csv',type="primary"
     )
 
+    with st.expander('Report month'):
+        this_year = datetime.now().year
+        this_month = datetime.now().month
+        report_year = st.selectbox("", range(this_year, this_year - 2, -1))
+        month_abbr = month_abbr[1:]
+        report_month_str = st.radio("", month_abbr, index=this_month - 1, horizontal=True)
+        report_month = month_abbr.index(report_month_str) + 1
+
+    # Result
+    st.text(f'{report_year} {report_month_str}')
+
     # Plotly Heatmap for Average Price Per Night
     pivot_avg_price = filtered_data.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
     annotation_text = np.vectorize(lambda x: "€{:.0f}".format(x))(pivot_avg_price.values)
@@ -197,14 +211,14 @@ with tabs[0]:
     pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
     fig_percentage_diff = ff.create_annotated_heatmap(
         z=pivot_percentage_diff.values,
-        x=pivot_percentage_diff.columns.tolist(),
-        y=pivot_percentage_diff.index.tolist(),
+        x=pivot_percentage_diff.index.tolist(),
+        y=pivot_percentage_diff.columns.tolist()tolist(),
         annotation_text=np.around(pivot_percentage_diff.values, decimals=2).astype(str),
         colorscale='RdYlGn',
         showscale=True
     )
 
-    fig_percentage_diff.update_layout(title_text='Percentage Difference between LivinParis and Competitors', xaxis_title="Interval", yaxis_title="Bedrooms")
+    fig_percentage_diff.update_layout(title_text='Difference in pricing between LivinParis and Competitors', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
     # Pivot table and heatmap visualization
     pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
@@ -276,32 +290,6 @@ with tabs[0]:
         plt.show()"""
     
     #Net type of graphic
-    
-    # Plotly Heatmap for Average Price Per Night
-    pivot_avg_price = filtered_data.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
-    annotation_text = np.vectorize(lambda x: "€{:.0f}".format(x))(pivot_avg_price.values)
-
-    fig_avg_price = ff.create_annotated_heatmap(
-        z=pivot_avg_price.values,
-        x=list(range(len(combined_labels))),  # Use integer indices for x
-        y=pivot_avg_price.index.tolist(),
-        annotation_text=annotation_text,
-        colorscale='amp',
-        showscale=True
-    )
-
-    # Now update the x-axis to use the combined labels
-    fig_avg_price.update_layout(
-        xaxis=dict(
-            tickmode='array',
-            tickvals=list(range(len(combined_labels))),
-            ticktext=combined_labels
-        ),
-        xaxis_title="Interval",
-        yaxis_title="Bedrooms"
-    )
-
-    st.plotly_chart(fig_avg_price, use_container_width=True)
     
     
 with tabs[1]:
