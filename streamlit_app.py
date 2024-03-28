@@ -221,13 +221,13 @@ with tabs[0]:
     st.plotly_chart(fig_avg_price, use_container_width=True)
 
     pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
-    pivot_percentage_diff = pivot_percentage_diff.pivot_table('Interval', 'Percentage Difference')
+    pivot_percentage_diff = pivot_percentage_diff.pivot_table('Interval','Bedrooms', 'Percentage Difference')
 
     # Create the annotated heatmap
     fig_percentage_diff = ff.create_annotated_heatmap(
     z=pivot_percentage_diff.values,
-    x=pivot_percentage_diff.columns,
-    y=pivot_percentage_diff.index,
+    x=pivot_percentage_diff.index,
+    y=pivot_percentage_diff.columns,
     colorscale='RdYlGn',
     showscale=True
     )
