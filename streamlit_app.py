@@ -254,7 +254,8 @@ with tabs[0]:
     pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
 
     transposed_pivot = pivot_percentage_diff.T
-
+    
+    annotation_text = np.vectorize(lambda x: f"{x:.0f}%")(transposed_pivot.values)
 
     fig_percentage_diff = ff.create_annotated_heatmap(
     z=transposed_pivot.values,  # Note that we are using the transposed pivot now
@@ -270,18 +271,12 @@ with tabs[0]:
     fig_percentage_diff.update_layout(
         title_text='LivinParis vs Competitors 🥊',
         xaxis_title="Interval",
-        yaxis_title="Bedrooms"
+        yaxis_title=""
     )
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
     
-    #Testing
-    st.subheader('Airbnb Average Price Calendar View')
-
-    # Sidebar for user input
-      
-    create_calendar_heatmap(filtered_data_livinparis, 2024, month_selection)
+    st.caption("Note: Negative percentages 🟥 indicate intervals where LivinParis' prices are higher on average compared to competitors.")
     
-    st.pyplot(plt)
     st.divider()
     
     col1, col2, col3 = st.columns([0.2, 0.8, 0.2])
