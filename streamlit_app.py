@@ -267,7 +267,7 @@ with tabs[0]:
     # Pivot table and heatmap visualization
     pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Interval', columns='Bedrooms', aggfunc='mean').fillna(0)
     plt.figure(figsize=(15, 8))
-    ax = sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
+    ax = sns.heatmap(pivot_table, annot=True, fmt="{:.f}%", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
 
     #Testing
     st.subheader('Airbnb Average Price Calendar View')
