@@ -319,7 +319,7 @@ with tabs[1]:
         barmode='overlay',  # 'overlay' or 'group' based on how you want to display the bars
         text='Listing_id',
         nbins=6,  # Adjust this based on your data's range to get a bin size around 500
-        range_x=[500, 3000],  # Set the range for the x-axis
+        #range_x=[500, 3000],  # Set the range for the x-axis
         title='Distribution of Average Price per Night'
     )
 
