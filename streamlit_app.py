@@ -201,8 +201,10 @@ with tabs[0]:
         file_name='consolidated_data.csv',
         mime='text/csv',type="primary"
     )
-
-    st.subheader("Pricing deep dive?")
+    
+    st.divider()
+    
+    st.subheader("Pricing deep dive")
     # Plotly Heatmap for Average Price Per Night
     filtered_data_competitor= filtered_data[filtered_data['Livinparis'] == 'Yes']
     filtered_data_livinparis= filtered_data[filtered_data['Competitor'] == 'Yes']
@@ -233,13 +235,12 @@ with tabs[0]:
     showscale=True
     )
     
-    col1, col2= st.columns([0.2, 0.8])
-    with col1:
-        st.image("pictures/linvinparis.png")
-    with col2:
-        fig_avg_price_competitor.update_layout(title_text='Competitor Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
-        st.plotly_chart(fig_avg_price_competitor, use_container_width=True)
-    
+   
+    st.image("pictures/airbnb.png")
+    fig_avg_price_competitor.update_layout(title_text='Competitor Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
+    st.plotly_chart(fig_avg_price_competitor, use_container_width=True)
+        
+    st.image("pictures/livinparis.png")
     fig_avg_price_livinparis.update_layout(title_text='Livinparis Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_avg_price_livinparis, use_container_width=True)
 
