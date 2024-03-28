@@ -295,11 +295,11 @@ with tabs[0]:
     st.subheader('Airbnb Average Price Calendar View')
 
     # Sidebar for user input
-    months_map = {month: index for index, month in enumerate(calendar.month_name) if month}
     selected_month_num = months_map[month_selection]
     
     create_calendar_heatmap(filtered_data_livinparis, 2024, selected_month_num)
     
+    st.pyplot(plt)
     st.divider()
     
     col1, col2, col3 = st.columns([0.2, 0.8, 0.2])
