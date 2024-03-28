@@ -18,6 +18,8 @@ import july
 from july.utils import date_range
 from calendar import month_abbr
 from datetime import datetime
+import plotly.express as px
+
 
 # Ensure these libraries are in your requirements.txt
 
@@ -295,6 +297,22 @@ with tabs[0]:
     
     
 with tabs[1]:
+    
+    fig = px.bar(
+    filtered_data_interval,
+    x='Room',  # Replace 'Room' with the actual column name for room types
+    y='Price_per_night',
+    color='Competitor',  # This will color the bars differently for competitors and LivinParis
+    color_discrete_map={'Yes': 'red', 'No': 'black'},  # 'Yes' for competitors, 'No' for LivinParis
+    text='ID',  # This will place the ID on the bars
+    title='Average Price per Night for Each Room Type'
+    )
+    
+    fig.update_layout(xaxis_title='Room Type',yaxis_title='Average Price per Night',legend_title='Source',legend=dict(traceorder='normal',font=dict(size=12,)))
+
+    # Show the figure in the Streamlit app
+    st.plotly_chart(fig)
+    
     
     filtered_data_month = filtered_data[filtered_data['Check_in'].dt.month_name() == month_selection]
     intervals_in_month = filtered_data_month['Interval'].unique()
