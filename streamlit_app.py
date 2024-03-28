@@ -218,31 +218,33 @@ with tabs[0]:
     fig_avg_price.update_layout(title_text='Competitor Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_avg_price, use_container_width=True)
 
-    pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
-    pivot_percentage_diff = pivot_percentage_diff.pivot_table(index='Bedrooms', columns='Interval', values='Percentage Difference')
 
+
+
+
+
+
+
+
+
+    pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
     # Create the annotated heatmap
     fig_percentage_diff = ff.create_annotated_heatmap(
-    z=pivot_percentage_diff.values,
-    x=pivot_percentage_diff.columns.tolist(),
-    y=pivot_percentage_diff.index.tolist(),
-    colorscale='RdYlGn',
-    showscale=True
+        z=pivot_percentage_diff.values,
+        x=pivot_percentage_diff.columns.tolist(),
+        y=pivot_percentage_diff.index.tolist(),
+        annotation_text=np.around(pivot_percentage_diff.values, decimals=2).astype(str),
+        colorscale='RdYlGn',
+        showscale=True
     )
 
-    fig_percentage_diff.update_layout(
-        title='Difference in pricing between LivinParis and Competitors',
-        xaxis=dict(title='Interval', tickangle=-45),
-        yaxis=dict(title='Bedrooms')
-    )
-
+    fig_percentage_diff.update_layout(title_text='Difference in pricing between LivinParis and Competitors', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
-
-    # Improve the x-axis labels to show weekdays/weekends
-    # You can customize DateFormatter based on how you want to show the dates
-    date_format = DateFormatter("%b %d\n%A")
-    ax.xaxis.set_major_formatter(date_format)
-    plt.xticks(rotation=45)
+    # Pivot table and heatmap visualization
+    pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
+    plt.figure(figsize=(15, 8))
+    ax = sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
+    
 
     #Testing
     st.title('Airbnb Average Price Calendar View')
