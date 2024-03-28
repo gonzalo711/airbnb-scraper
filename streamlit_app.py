@@ -19,6 +19,7 @@ from july.utils import date_range
 from calendar import month_abbr
 from datetime import datetime
 import plotly.express as px
+from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
 
 
 # Ensure these libraries are in your requirements.txt
@@ -312,7 +313,7 @@ with tabs[1]:
     
     fig = px.bar(
     filtered_data_interval,
-    x='Room',  # Replace 'Room' with the actual column name for room types
+    #x='Room',  # Replace 'Room' with the actual column name for room types
     y='Price_per_night',
     color='Competitor',  # This will color the bars differently for competitors and LivinParis
     color_discrete_map={'Yes': 'red', 'No': 'black'},  # 'Yes' for competitors, 'No' for LivinParis
@@ -352,6 +353,7 @@ with tabs[2]:
     # Selecting specific columns
     columns_to_display = ['Title', 'Price_per_night', 'Check_in', 'Check_out', 'URL']
     filtered_subset = filtered_data[columns_to_display]
-
+    
+    AgGrid(filtered_subset)
     # Displaying the subset DataFrame
-    st.dataframe(filtered_subset)
+    #st.dataframe(filtered_subset)
