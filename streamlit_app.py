@@ -203,34 +203,42 @@ with tabs[0]:
     )
 
 
-    with st.expander('Report month'):
-        this_year = datetime.now().year
-        this_month = datetime.now().month
-        report_year = st.selectbox("", range(this_year, this_year - 2, -1))
-        month_abbr = month_abbr[1:]
-        report_month_str = st.radio("", month_abbr, index=this_month - 1, horizontal=True)
-        report_month = month_abbr.index(report_month_str) + 1
-
-    # Result
-    st.text(f'{report_year} {report_month_str}')
-
     # Plotly Heatmap for Average Price Per Night
-    pivot_avg_price = filtered_data.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
-    annotation_text = np.vectorize(lambda x: "€{:.0f}".format(x))(pivot_avg_price.values)
+    filtered_data_competitor= filtered_data[filtered_data['Livinparis'] == 'Yes']
+    filtered_data_livinparis= filtered_data[filtered_data['Competitor'] == 'Yes']
+    
+    pivot_avg_price_competitor = filtered_data_competitor.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
+    pivot_avg_price_livinparis = filtered_data_livinparis.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
+    annotation_text_competitor = np.vectorize(lambda x: "€{:.0f}".format(x))(pivot_avg_price_competitor.values)
+    annotation_text_livinparis = np.vectorize(lambda x: "€{:.0f}".format(x))(pivot_avg_price_livinparis.values)
 
 
     st.divider()
 
-    fig_avg_price = ff.create_annotated_heatmap(
-        z=pivot_avg_price.values,
-        x=pivot_avg_price.columns.tolist(),
-        y=pivot_avg_price.index.tolist(),
-        annotation_text=annotation_text,
+    fig_avg_price_competitor = ff.create_annotated_heatmap(
+        z=pivot_avg_price_competitor.values,
+        x=pivot_avg_price_competitor.columns.tolist(),
+        y=pivot_avg_price_competitor.index.tolist(),
+        annotation_text=annotation_text_competitor,
         colorscale='amp',
         showscale=True
     )
+    
+        fig_avg_price_livinparis = ff.create_annotated_heatmap(
+        z=pivot_avg_price_livinparis.values,
+        x=pivot_avg_price_livinparis.columns.tolist(),
+        y=pivot_avg_price_livinparis.index.tolist(),
+        annotation_text=annotation_text_livinparis,
+        colorscale='amp',
+        showscale=True
+    )
+    
+    
     fig_avg_price.update_layout(title_text='Competitor Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
-    st.plotly_chart(fig_avg_price, use_container_width=True)
+    st.plotly_chart(fig_avg_price_competitor, use_container_width=True)
+    
+    fig_avg_price.update_layout(title_text='Livinparis Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
+    st.plotly_chart(fig_avg_price_livinparis, use_container_width=True)
 
 
     pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
