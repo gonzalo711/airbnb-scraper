@@ -241,8 +241,14 @@ with tabs[0]:
         st.divider()
     fig_avg_price_competitor.update_layout(title_text='Competitor Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_avg_price_competitor, use_container_width=True)
-        
-    st.image("pictures/livinparis.png")
+    
+    
+    col1, col2= st.columns([0.1, 0.9])
+    with col1:
+        st.image("pictures/linvinparis.png")
+    with col2:
+        st.divider()
+
     fig_avg_price_livinparis.update_layout(title_text='Livinparis Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_avg_price_livinparis, use_container_width=True)
 
