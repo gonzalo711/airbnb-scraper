@@ -155,7 +155,7 @@ with col2:
     st.image("pictures/linvinparis.png")
 
 st.write("#")
-tabs = st.tabs(['Pricing benchmark','Review a certain period', 'Explore the dataset'])
+tabs = st.tabs(['Pricing benchmark 🔍','Review scraped results for an interval 🗓️', 'Explore the dataset 📚'])
 
 with tabs[0]:
     st.write("#")
@@ -289,6 +289,8 @@ with tabs[0]:
         yaxis_title="Bedrooms"
     )
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
+    fig_percentage_diff.update_traces(zmin=-25, zmax=25)
+    
     #Testing
     st.subheader('Airbnb Average Price Calendar View')
 
