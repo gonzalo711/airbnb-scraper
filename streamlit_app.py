@@ -126,19 +126,18 @@ def make_clickable(url):
     # This function returns an HTML anchor tag with the URL as the hyperlink target
     return f'<a target="_blank" href="{url}">{url}</a>'
     
-def plot_calendar_heatmap(data, selected_month):
-    # Filter data for the selected month
-    data_month = data[data['Check_in'].dt.month_name() == selected_month]
-
-    # Group by the Check_in date and calculate the mean price for each date
-    data_grouped = data_month.groupby(data_month['Check_in'].dt.date)['Price_per_night'].mean()
-
-    # Create a pandas Series with dates as the index and the mean price as the value
-    prices_series = pd.Series(data_grouped, index=pd.to_datetime(data_grouped.index))
-
-    # Generate the calendar plot
-    calplot.calplot(prices_series, cmap='YlGn', edgecolor=None, fillcolor='white', linewidth=0,
-                    fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
+def create_calendar_heatmap(df, year, month):
+    # Filter for the year and month
+    df_month = df[df['Check_in'].dt.year == year]
+    df_month = df_month[df_month['Check_in'].dt.month == month]
+    
+    # Group by day and calculate mean price
+    df_daily = df_month.set_index('Check_in').resample('D')['Price_per_night'].mean()
+    
+    # Use calplot to plot the data
+    calplot.calplot(df_daily, how=None, cmap='YlGn', fillcolor='whitesmoke', linewidth=1, linecolor=None,
+                    daylabels='MTWTFSS', dayticks=True, dropzero=True, yearlabels=False,
+                    edgecolor='gray', figsize=(16, 3), suptitle=f'Average Price Per Night for {year}-{month:02d}')
     plt.show()
 
 
@@ -273,16 +272,10 @@ with tabs[0]:
     st.subheader('Airbnb Average Price Calendar View')
 
     # Sidebar for user input
-    plot_calendar_heatmap(data, month_selection)
-    ## Create data
-    dates = date_range("2020-01-01", "2020-12-31")
-    data = np.random.randint(0, 100, len(dates))
-
-    ## Create a figure with a single axes
-    fig, ax = plt.subplots()
-    st.title("📊 A `july.month_plot()` in streamlit")
-    ## Tell streamlit to display the figure
-    st.pyplot(fig)
+    months_map = {month: index for index, month in enumerate(calendar.month_name) if month}
+    selected_month_num = months_map[month_selection]
+    
+    create_calendar_heatmap(filtered_data_livinparis, 2024, selected_month_num)
     
     st.divider()
     
