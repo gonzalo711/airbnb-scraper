@@ -224,13 +224,13 @@ with tabs[0]:
         showscale=True
     )
     
-        fig_avg_price_livinparis = ff.create_annotated_heatmap(
-        z=pivot_avg_price_livinparis.values,
-        x=pivot_avg_price_livinparis.columns.tolist(),
-        y=pivot_avg_price_livinparis.index.tolist(),
-        annotation_text=annotation_text_livinparis,
-        colorscale='amp',
-        showscale=True
+    fig_avg_price_livinparis = ff.create_annotated_heatmap(
+    z=pivot_avg_price_livinparis.values,
+    x=pivot_avg_price_livinparis.columns.tolist(),
+    y=pivot_avg_price_livinparis.index.tolist(),
+    annotation_text=annotation_text_livinparis,
+    colorscale='amp',
+    showscale=True
     )
     
     
