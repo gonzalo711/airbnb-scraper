@@ -283,13 +283,15 @@ with tabs[0]:
     colorscale='RdYlGn',
     showscale=True
     )
+    
+    fig_percentage_diff.update_traces(zmin=-60, zmax=60)
+
     fig_percentage_diff.update_layout(
         title_text='Difference in pricing between LivinParis and Competitors',
         xaxis_title="Interval",
         yaxis_title="Bedrooms"
     )
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
-    fig_percentage_diff.update_traces(zmin=-25, zmax=25)
     
     #Testing
     st.subheader('Airbnb Average Price Calendar View')
