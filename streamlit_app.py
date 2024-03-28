@@ -312,16 +312,23 @@ with tabs[1]:
     
     
     fig = px.bar(
-    filtered_data_interval,
-    x='Bedrooms',  # Replace 'Room' with the actual column name for room types
-    y='Price_per_night',
-    color='Competitor',  # This will color the bars differently for competitors and LivinParis
-    color_discrete_map={'Yes': 'red', 'No': 'black'},  # 'Yes' for competitors, 'No' for LivinParis
-    text='Listing_id',  # This will place the ID on the bars
-    title='Average Price per Night for Each Room Type'
+        filtered_data_interval,
+        x='Price_per_night',
+        y='Bedrooms',  # This now represents different room types as categories on the y-axis
+        color='Competitor',  # This will color the bars differently for competitors and LivinParis
+        color_discrete_map={'Yes': 'red', 'No': 'black'},  # 'Yes' for competitors, 'No' for LivinParis
+        text='Listing_id',  # This will place the ID on the bars
+        orientation='h',  # This makes the bars horizontal
+        title='Average Price per Night for Each Room Type'
     )
-    
-    fig.update_layout(xaxis_title='Room Type',yaxis_title='Average Price per Night',legend_title='Source',legend=dict(traceorder='normal',font=dict(size=12,)))
+
+    fig.update_layout(
+        xaxis_title='Average Price per Night',
+        yaxis_title='',  # No title for y-axis
+        showlegend=True,
+        legend_title='Source',
+        legend=dict(traceorder='normal', font=dict(size=12)),
+    )
 
     # Show the figure in the Streamlit app
     st.plotly_chart(fig)
