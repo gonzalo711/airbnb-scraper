@@ -279,13 +279,16 @@ with tabs[0]:
     
     st.divider()
     
-    st.download_button(
-        label="Download data as CSV",
-        data=data.to_csv().encode('utf-8'),
-        file_name='consolidated_data.csv',
-        mime='text/csv',type="primary"
-    )
-    
+    col1, col2= st.columns([0.5, 0.5])
+    with col1:
+        st.download_button(
+            label="Download data as CSV",
+            data=data.to_csv().encode('utf-8'),
+            file_name='consolidated_data.csv',
+            mime='text/csv',type="primary"
+        )
+    with col2:
+        st.link_button("Go to Airbnb", "https://www.airbnb.com/")
     
     
 with tabs[1]:
