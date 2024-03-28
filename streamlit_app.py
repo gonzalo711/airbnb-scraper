@@ -255,7 +255,7 @@ with tabs[0]:
 
     transposed_pivot = pivot_percentage_diff.T
     
-    annotation_text = np.vectorize(lambda x: f"{x:.0f}%")(transposed_pivot.values)
+    annotation_text = np.vectorize(lambda x: f"{int(round(x))}%")(transposed_pivot.values)
 
     fig_percentage_diff = ff.create_annotated_heatmap(
     z=transposed_pivot.values,  # Note that we are using the transposed pivot now
