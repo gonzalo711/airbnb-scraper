@@ -298,6 +298,13 @@ with tabs[0]:
     
 with tabs[1]:
     
+    filtered_data_month = filtered_data[filtered_data['Check_in'].dt.month_name() == month_selection]
+    intervals_in_month = filtered_data_month['Interval'].unique()
+    
+    st.subheader("Pick an interval to check out the competitors 👀")
+    interval_selection = st.selectbox('Select Interval', intervals_in_month)
+    
+    
     filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
     columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews', 'URL']
     df_display = filtered_data_interval[columns_to_display].copy()
@@ -318,12 +325,6 @@ with tabs[1]:
     # Show the figure in the Streamlit app
     st.plotly_chart(fig)
     
-    
-    filtered_data_month = filtered_data[filtered_data['Check_in'].dt.month_name() == month_selection]
-    intervals_in_month = filtered_data_month['Interval'].unique()
-    
-    st.subheader("Pick an interval to check out the competitors 👀")
-    interval_selection = st.selectbox('Select Interval', intervals_in_month)
     
 
 
