@@ -233,7 +233,7 @@ with tabs[0]:
     fig_percentage_diff.update_layout(title_text='Difference in pricing between LivinParis and Competitors', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
     # Pivot table and heatmap visualization
-    pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Interval', columns='Bedrooms', aggfunc='mean').fillna(0)
+    pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
     plt.figure(figsize=(15, 8))
     ax = sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
 
@@ -242,7 +242,7 @@ with tabs[0]:
 
     # Sidebar for user input
         
-    ##plot_calendar_heatmap(data, month_selection)
+    plot_calendar_heatmap(data, month_selection)
     ## Create data
     dates = date_range("2020-01-01", "2020-12-31")
     data = np.random.randint(0, 100, len(dates))
@@ -256,7 +256,7 @@ with tabs[0]:
     ## Tell streamlit to display the figure
     st.pyplot(fig)
         
-    """def plot_calendar_heatmap(data, selected_month):
+    def plot_calendar_heatmap(data, selected_month):
         # Filter data for the selected month
         data_month = data[data['Check_in'].dt.month_name() == selected_month]
 
@@ -270,27 +270,6 @@ with tabs[0]:
         calplot.calplot(prices_series, cmap='YlGn', edgecolor=None, fillcolor='white', linewidth=0,
                         fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
         plt.show()
-        """
-        
-
-    # Function to plot the heatmap for the selected month
-    """def plot_calendar_heatmap(data, selected_month):
-        # Filter data for the selected month
-        data_month = data[data['Check_in'].dt.month_name() == selected_month]
-        
-        # Ensure 'Check_in' is the index and is of datetime type
-        data_month.set_index('Check_in', inplace=True)
-        data_month.index = pd.to_datetime(data_month.index)
-        
-        # Group by Check_in date and calculate the mean price for each date
-        data_grouped = data_month['Price_per_night'].resample('D').mean()
-        
-        # Generate the calendar plot
-        calplot.calplot(data_grouped, cmap='YlGn', edgecolor=None, linewidth=0,
-                        fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
-        plt.show()"""
-    
-    #Net type of graphic
     
     
 with tabs[1]:
