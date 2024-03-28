@@ -148,7 +148,7 @@ st.set_page_config(layout="wide")
 
 col1, col2= st.columns([0.8, 0.2])
 with col1:
-    st.header('🏡 Airbnb competitor pricing Analysis')
+    st.title('🏡 Airbnb competitor pricing Analysis')
     
     st.markdown("<hr style='border-top: 2px solid red; margin-top: 20px; margin-bottom: 20px'/>", unsafe_allow_html=True)
 with col2:
@@ -270,7 +270,7 @@ with tabs[0]:
     ax = sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
 
     #Testing
-    st.title('Airbnb Average Price Calendar View')
+    st.subheader('Airbnb Average Price Calendar View')
 
     # Sidebar for user input
     plot_calendar_heatmap(data, month_selection)
