@@ -185,26 +185,22 @@ with tabs[0]:
     delta_competitors = "{:.2f}%".format(percentage_of_total_competitors)
 
     st.subheader("What is my data sample?")
-    col1, col2, col3 = st.columns([0.4, 0.3, 0.3])
+    col1, col2, col3 = st.columns([0.33, 0.33, 0.33])
     with col1:
         st.metric(label=f"Total apartments scraped for {month_selection}", value=total_count)
     with col2:
-        st.metric(label=f"Number of LivinParis apartments scraped in {month_selection}", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
+        st.metric(label=f"LivinParis apartments scraped in {month_selection}", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
     with col3:
-        st.metric(label=f"Number of Competitor Apartments scraped in {month_selection}", value=competitors_count, delta=delta_competitors, delta_color="off")
+        st.metric(label=f"Competitor Apartments scraped in {month_selection}", value=competitors_count, delta=delta_competitors, delta_color="off")
 
     st.divider()
 
-    st.download_button(
-        label="Download data as CSV",
-        data=data.to_csv().encode('utf-8'),
-        file_name='consolidated_data.csv',
-        mime='text/csv',type="primary"
-    )
-    
-    st.divider()
-    
+        
     st.subheader("Pricing deep dive")
+    
+    st.write("#")
+    st.write("#")
+
     # Plotly Heatmap for Average Price Per Night
     filtered_data_competitor= filtered_data[filtered_data['Livinparis'] == 'Yes']
     filtered_data_livinparis= filtered_data[filtered_data['Competitor'] == 'Yes']
@@ -288,6 +284,16 @@ with tabs[0]:
     ## Tell streamlit to display the figure
     st.pyplot(fig)
     
+    st.divider()
+    
+    st.download_button(
+        label="Download data as CSV",
+        data=data.to_csv().encode('utf-8'),
+        file_name='consolidated_data.csv',
+        mime='text/csv',type="primary"
+    )
+    
+    
     
 with tabs[1]:
     
@@ -298,7 +304,7 @@ with tabs[1]:
     interval_selection = st.selectbox('Select Interval', intervals_in_month)
     
     filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
-    columns_to_display = ['Title', 'Price_per_night', 'Review_rating', 'URL']
+    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews', 'URL']
     df_display = filtered_data_interval[columns_to_display].copy()
 
     # Convert URLs to clickable links
