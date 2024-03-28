@@ -187,11 +187,11 @@ with tabs[0]:
     st.subheader("What is my data sample?")
     col1, col2, col3 = st.columns([0.4, 0.3, 0.3])
     with col1:
-        st.metric(label="Total apartments scraped for the month", value=total_count)
+        st.metric(label=f"Total apartments scraped for {month_selection}", value=total_count)
     with col2:
-        st.metric(label="Number of LivinParis apartments scraped for the month", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
+        st.metric(label=f"Number of LivinParis apartments scraped in {month_selection}", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
     with col3:
-        st.metric(label="Number of Competitor Apartments scraped for the month", value=competitors_count, delta=delta_competitors, delta_color="off")
+        st.metric(label=f"Number of Competitor Apartments scraped in {month_selection}", value=competitors_count, delta=delta_competitors, delta_color="off")
 
     st.divider()
 
@@ -215,7 +215,6 @@ with tabs[0]:
     annotation_text_livinparis = np.vectorize(lambda x: "€{:.0f}".format(x))(pivot_avg_price_livinparis.values)
 
 
-    st.divider()
 
     fig_avg_price_competitor = ff.create_annotated_heatmap(
         z=pivot_avg_price_competitor.values,
@@ -235,7 +234,7 @@ with tabs[0]:
     showscale=True
     )
     
-    col1, col2= st.columns([0.3, 0.7])
+    col1, col2= st.columns([0.1, 0.9])
     with col1:
         st.image("pictures/airbnb.png")
     with col2:
