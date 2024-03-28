@@ -313,11 +313,11 @@ with tabs[1]:
     
     fig = px.bar(
     filtered_data_interval,
-    #x='Room',  # Replace 'Room' with the actual column name for room types
+    x='Bedrooms',  # Replace 'Room' with the actual column name for room types
     y='Price_per_night',
     color='Competitor',  # This will color the bars differently for competitors and LivinParis
     color_discrete_map={'Yes': 'red', 'No': 'black'},  # 'Yes' for competitors, 'No' for LivinParis
-    text='ID',  # This will place the ID on the bars
+    text='Listing_id',  # This will place the ID on the bars
     title='Average Price per Night for Each Room Type'
     )
     
@@ -326,8 +326,6 @@ with tabs[1]:
     # Show the figure in the Streamlit app
     st.plotly_chart(fig)
     
-    
-
 
     # Convert URLs to clickable links
     df_display['URL'] = df_display['URL'].apply(make_clickable)
