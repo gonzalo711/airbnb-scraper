@@ -235,8 +235,11 @@ with tabs[0]:
     showscale=True
     )
     
-   
+    col1, col2= st.columns([0.3, 0.7])
+    with col1:
     st.image("pictures/airbnb.png")
+    with col2:
+    
     fig_avg_price_competitor.update_layout(title_text='Competitor Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_avg_price_competitor, use_container_width=True)
         
