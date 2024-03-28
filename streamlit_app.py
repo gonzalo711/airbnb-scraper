@@ -298,6 +298,11 @@ with tabs[0]:
     
 with tabs[1]:
     
+    filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
+    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews', 'URL']
+    df_display = filtered_data_interval[columns_to_display].copy()
+    
+    
     fig = px.bar(
     filtered_data_interval,
     x='Room',  # Replace 'Room' with the actual column name for room types
@@ -320,9 +325,7 @@ with tabs[1]:
     st.subheader("Pick an interval to check out the competitors 👀")
     interval_selection = st.selectbox('Select Interval', intervals_in_month)
     
-    filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
-    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews', 'URL']
-    df_display = filtered_data_interval[columns_to_display].copy()
+
 
     # Convert URLs to clickable links
     df_display['URL'] = df_display['URL'].apply(make_clickable)
