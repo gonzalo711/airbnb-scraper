@@ -222,7 +222,7 @@ with tabs[0]:
         x=pivot_avg_price_competitor.columns.tolist(),
         y=pivot_avg_price_competitor.index.tolist(),
         annotation_text=annotation_text_competitor,
-        colorscale='amp',
+        colorscale='blues',
         showscale=True
     )
     
