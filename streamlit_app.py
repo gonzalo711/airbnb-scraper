@@ -126,6 +126,20 @@ def make_clickable(url):
     # This function returns an HTML anchor tag with the URL as the hyperlink target
     return f'<a target="_blank" href="{url}">{url}</a>'
     
+def plot_calendar_heatmap(data, selected_month):
+    # Filter data for the selected month
+    data_month = data[data['Check_in'].dt.month_name() == selected_month]
+
+    # Group by the Check_in date and calculate the mean price for each date
+    data_grouped = data_month.groupby(data_month['Check_in'].dt.date)['Price_per_night'].mean()
+
+    # Create a pandas Series with dates as the index and the mean price as the value
+    prices_series = pd.Series(data_grouped, index=pd.to_datetime(data_grouped.index))
+
+    # Generate the calendar plot
+    calplot.calplot(prices_series, cmap='YlGn', edgecolor=None, fillcolor='white', linewidth=0,
+                    fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
+    plt.show()
 
 
 # Streamlit UI for interactive visualization
@@ -241,7 +255,6 @@ with tabs[0]:
     st.title('Airbnb Average Price Calendar View')
 
     # Sidebar for user input
-        
     plot_calendar_heatmap(data, month_selection)
     ## Create data
     dates = date_range("2020-01-01", "2020-12-31")
@@ -249,27 +262,9 @@ with tabs[0]:
 
     ## Create a figure with a single axes
     fig, ax = plt.subplots()
-
-    
-
     st.title("📊 A `july.month_plot()` in streamlit")
     ## Tell streamlit to display the figure
     st.pyplot(fig)
-        
-    def plot_calendar_heatmap(data, selected_month):
-        # Filter data for the selected month
-        data_month = data[data['Check_in'].dt.month_name() == selected_month]
-
-        # Group by the Check_in date and calculate the mean price for each date
-        data_grouped = data_month.groupby(data_month['Check_in'].dt.date)['Price_per_night'].mean()
-
-        # Create a pandas Series with dates as the index and the mean price as the value
-        prices_series = pd.Series(data_grouped, index=pd.to_datetime(data_grouped.index))
-
-        # Generate the calendar plot
-        calplot.calplot(prices_series, cmap='YlGn', edgecolor=None, fillcolor='white', linewidth=0,
-                        fig_kws=dict(figsize=(16, 9)), suptitle=f'Average Price Per Night for {selected_month}')
-        plt.show()
     
     
 with tabs[1]:
