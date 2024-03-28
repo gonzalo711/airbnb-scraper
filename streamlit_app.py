@@ -309,6 +309,7 @@ with tabs[0]:
             mime='text/csv',type="primary"
         )
     with col2:
+        st.write("#")
     
     with col3:
         st.link_button("Go to Airbnb", "https://www.airbnb.com/")
