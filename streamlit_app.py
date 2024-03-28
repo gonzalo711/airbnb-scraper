@@ -248,7 +248,9 @@ with tabs[0]:
     fig_avg_price_livinparis.update_layout(title_text='Livinparis Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_avg_price_livinparis, use_container_width=True)
 
-
+    
+    transposed_pivot = percentage_difference_pivot.T
+    
     pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
     # Create the annotated heatmap
     fig_percentage_diff = ff.create_annotated_heatmap(
@@ -261,7 +263,7 @@ with tabs[0]:
     )
     fig_percentage_diff.update_traces(zmin=-25, zmax=25)
 
-
+    
     fig_percentage_diff.update_layout(title_text='Difference in pricing between LivinParis and Competitors', xaxis_title="Bedrooms", yaxis_title="Interval")
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
     # Pivot table and heatmap visualization
@@ -269,6 +271,24 @@ with tabs[0]:
     plt.figure(figsize=(15, 8))
     ax = sns.heatmap(pivot_table, annot=True, fmt=".0%", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
 
+
+
+
+
+    fig_percentage_diff = ff.create_annotated_heatmap(
+    z=transposed_pivot.values,  # Note that we are using the transposed pivot now
+    x=transposed_pivot.columns.tolist(),  # These are now the intervals
+    y=transposed_pivot.index.tolist(),  # This is now 'Bedrooms'
+    annotation_text=np.around(transposed_pivot.values, decimals=2).astype(str),
+    colorscale='RdYlGn',
+    showscale=True
+    )
+    fig_percentage_diff.update_layout(
+        title_text='Difference in pricing between LivinParis and Competitors',
+        xaxis_title="Interval",
+        yaxis_title="Bedrooms"
+    )
+    st.plotly_chart(fig_percentage_diff, use_container_width=True)
     #Testing
     st.subheader('Airbnb Average Price Calendar View')
 
