@@ -249,7 +249,7 @@ with tabs[0]:
     st.plotly_chart(fig_avg_price_livinparis, use_container_width=True)
 
     
-    transposed_pivot = percentage_difference_pivot.T
+        
     
     pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
     # Create the annotated heatmap
@@ -272,7 +272,7 @@ with tabs[0]:
     ax = sns.heatmap(pivot_table, annot=True, fmt=".0%", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
 
 
-
+    transposed_pivot = pivot_percentage_diff.T
 
 
     fig_percentage_diff = ff.create_annotated_heatmap(
@@ -300,7 +300,7 @@ with tabs[0]:
     
     st.divider()
     
-    col1, col2= st.columns([0.5, 0.5])
+    col1, col2, col3 = st.columns([0.2, 0.8, 0.2])
     with col1:
         st.download_button(
             label="Download data as CSV",
@@ -309,6 +309,8 @@ with tabs[0]:
             mime='text/csv',type="primary"
         )
     with col2:
+    
+    with col3:
         st.link_button("Go to Airbnb", "https://www.airbnb.com/")
     
     
