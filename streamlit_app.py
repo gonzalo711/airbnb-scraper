@@ -278,9 +278,8 @@ with tabs[0]:
     st.subheader('Airbnb Average Price Calendar View')
 
     # Sidebar for user input
-    selected_month_num = months_map[month_selection]
-    
-    create_calendar_heatmap(filtered_data_livinparis, 2024, selected_month_num)
+      
+    create_calendar_heatmap(filtered_data_livinparis, 2024, month_selection)
     
     st.pyplot(plt)
     st.divider()
