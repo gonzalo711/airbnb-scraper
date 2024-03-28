@@ -219,14 +219,6 @@ with tabs[0]:
     st.plotly_chart(fig_avg_price, use_container_width=True)
 
 
-
-
-
-
-
-
-
-
     pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
     # Create the annotated heatmap
     fig_percentage_diff = ff.create_annotated_heatmap(
@@ -241,10 +233,9 @@ with tabs[0]:
     fig_percentage_diff.update_layout(title_text='Difference in pricing between LivinParis and Competitors', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
     # Pivot table and heatmap visualization
-    pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Bedrooms', columns='Interval', aggfunc='mean').fillna(0)
+    pivot_table = filtered_data.pivot_table(values='Price_per_night', index='Interval', columns='Bedrooms', aggfunc='mean').fillna(0)
     plt.figure(figsize=(15, 8))
     ax = sns.heatmap(pivot_table, annot=True, fmt=".2f", cmap='coolwarm', cbar_kws={'label': 'Average Price'})
-    
 
     #Testing
     st.title('Airbnb Average Price Calendar View')
