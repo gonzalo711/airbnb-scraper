@@ -311,21 +311,21 @@ with tabs[1]:
     df_display = filtered_data_interval[columns_to_display].copy()
     
     
-    fig = px.bar(
+    fig = px.histogram(
         filtered_data_interval,
         x='Price_per_night',
-        y='Bedrooms',  # This now represents different room types as categories on the y-axis
-        color='Competitor',  # This will color the bars differently for competitors and LivinParis
-        color_discrete_map={'Yes': 'red', 'No': 'black'},  # 'Yes' for competitors, 'No' for LivinParis
-        text='Listing_id',  # This will place the ID on the bars
-        orientation='h',  # This makes the bars horizontal
-        title='Average Price per Night for Each Room Type'
+        color='Competitor',
+        color_discrete_map={'Yes': 'red', 'No': 'black'},
+        barmode='overlay',  # 'overlay' or 'group' based on how you want to display the bars
+        text='Listing_id',
+        nbins=6,  # Adjust this based on your data's range to get a bin size around 500
+        range_x=[500, 3000],  # Set the range for the x-axis
+        title='Distribution of Average Price per Night'
     )
 
     fig.update_layout(
         xaxis_title='Average Price per Night',
-        yaxis_title='',  # No title for y-axis
-        showlegend=True,
+        yaxis_title='Count',
         legend_title='Source',
         legend=dict(traceorder='normal', font=dict(size=12)),
     )
