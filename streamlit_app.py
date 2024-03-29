@@ -277,7 +277,7 @@ with tabs[0]:
     z=transposed_pivot.values,  # Note that we are using the transposed pivot now
     x=transposed_pivot.columns.tolist(),  # These are now the intervals
     y=transposed_pivot.index.tolist(),  # This is now 'Bedrooms'
-    annotation_text=annotation_text,,
+    annotation_text=annotation_text,
     colorscale='RdYlGn',
     showscale=True
     )
