@@ -143,7 +143,19 @@ def create_calendar_heatmap(df, year, month):
                     daylabels='MTWTFSS', dayticks=True, dropzero=True, yearlabels=False,
                     edgecolor='gray', figsize=(16, 3), suptitle=f'Average Price Per Night for {year}-{month:02d}')
     plt.show()
+def aggrid_interactive_table(df):
+            # Convert the 'URL' column to clickable links using HTML anchor tags
+    df['URL'] = df['URL'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
 
+            # Create an interactive grid with AgGrid
+    gb = GridOptionsBuilder.from_dataframe(df)
+    gb.configure_pagination()  # Enable pagination
+    gb.configure_side_bar()  # Enable a side bar
+    gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
+    grid_options = gb.build()
+
+            # Display the grid
+    AgGrid(df, gridOptions=grid_options, enable_enterprise_modules=True, allow_unsafe_jscode=True)
 
 # Streamlit UI for interactive visualization
 
@@ -331,23 +343,7 @@ with tabs[1]:
 
     # Show the figure in the Streamlit app
     st.plotly_chart(fig)
-    
 
-    # Convert URLs to clickable links
-        def aggrid_interactive_table(df):
-            # Convert the 'URL' column to clickable links using HTML anchor tags
-            df['URL'] = df['URL'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
-
-            # Create an interactive grid with AgGrid
-            gb = GridOptionsBuilder.from_dataframe(df)
-            gb.configure_pagination()  # Enable pagination
-            gb.configure_side_bar()  # Enable a side bar
-            gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
-            grid_options = gb.build()
-
-            # Display the grid
-            AgGrid(df, gridOptions=grid_options, enable_enterprise_modules=True, allow_unsafe_jscode=True)
-    
     with col1:
         # Assuming df_display is your dataframe with the 'URL' column
         aggrid_interactive_table(df_display)
