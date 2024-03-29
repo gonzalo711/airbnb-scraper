@@ -210,15 +210,15 @@ with tabs[0]:
 
     st.divider()
 
-    col1, col2 = st.columns([0.7,0.3])
+    col1, col2 = st.columns([0.5,0.5])
     with col1:
-        st.subheader("Pricing deep dive")
+        st.subheader(f"Pricing deep dive for {month_selection}")
     with col2:
         # Display the calendar picture
         # Construct the file path for the selected month's image using an f-string
         image_file_path = f"{month_selection}_2024.png"
         try:
-            st.image(image_file_path, caption=f"{month_selection}", width=200)
+            st.image(image_file_path, caption=f"{month_selection}", width=500)
         except Exception as e:
             st.error(f"An error occurred: {e}")
         
@@ -351,8 +351,7 @@ with tabs[1]:
     
     
     
-
-    
+    st.caption("Note: Competitor apts in 🟥 and LivinParis apts in ⬛")
     
     fig = px.histogram(
         filtered_data_competitors_or_livinparis,
@@ -368,7 +367,6 @@ with tabs[1]:
     fig.update_layout(
         xaxis_title='Average Price per Night',
         yaxis_title='Count',
-        legend_title='Type',
         legend=dict(traceorder='normal', font=dict(size=12)),
     )
 
