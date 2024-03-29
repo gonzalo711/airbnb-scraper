@@ -271,10 +271,8 @@ with tabs[0]:
         st.divider()
 
     fig_avg_price_livinparis.update_layout(title_text='Livinparis Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
-    
-    
     st.plotly_chart(fig_avg_price_livinparis, use_container_width=True)
-       
+
         
     
     pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
