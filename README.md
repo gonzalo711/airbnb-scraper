@@ -1,12 +1,13 @@
+![alt text]([http://url/to/img.png](https://static.wixstatic.com/media/67af71_12ed72d6a5e649b2be0f5e848a9ad87f~mv2.png))
+
 # Airbnb pricing assisstant 🏡 🤖
 
 How my company should set up pricing based on competitors? 
 
+In this project we help [LivinParis](livinparis.com), a luxury rental apartment company based in Paris, to benchmark the pricing of their main competitors to give actionable guidance on pricing strategy
 
 
-These are some of the questions that may be answered by analyzing a large collection of movie data such as the one compiled from The Movie Database (TMDB). It serves as a valuable resource for investigating fundamental questions regarding their success with information on plot details, cast and crew composition, production budgets, box office revenues, etc.
-
-This data app shows a simple demonstration of an interactive data explorer that allow users to adjust parameter widgets and observe in real-time updates to data visualization.
+This data app shows an interactive data explorer that allow LivinParis to adjust parameters like months and bedrooms to observe in near real-time updates to data visualization.
 
 ## Demo App
 
@@ -23,5 +24,7 @@ This data app shows a simple demonstration of an interactive data explorer that 
 
 ## Reference
 
+-
 - [How to get data from Airbnb with selenium](https://stackoverflow.com/questions/75163869/how-to-get-data-from-airbnb-with-selenium)
+- [Automating Python scripts locally using crontab](https://medium.com/geekculture/automating-python-scripts-locally-using-crontab-2031151b559f)
   
