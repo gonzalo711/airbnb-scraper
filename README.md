@@ -1,6 +1,8 @@
-# 🏡 Airbnb pricing benchmark
+# Airbnb pricing assisstant 🏡 🤖
 
-How my company should set up pricing based on competitors? Which movie genre performs best at the box office?
+How my company should set up pricing based on competitors? 
+
+
 
 These are some of the questions that may be answered by analyzing a large collection of movie data such as the one compiled from The Movie Database (TMDB). It serves as a valuable resource for investigating fundamental questions regarding their success with information on plot details, cast and crew composition, production budgets, box office revenues, etc.
 
@@ -8,7 +10,7 @@ This data app shows a simple demonstration of an interactive data explorer that 
 
 ## Demo App
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://interactive-data-explorer-template.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://airbnbscraper-4ndj0jofxhh.streamlit.app/)
 
 ## GitHub Codespaces
 
@@ -16,5 +18,5 @@ This data app shows a simple demonstration of an interactive data explorer that 
 
 ## Reference
 
-- [TMDB 5000 Movie Dataset](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata)
+- [How to get data from Airbnb with selenium](https://stackoverflow.com/questions/75163869/how-to-get-data-from-airbnb-with-selenium)
   
