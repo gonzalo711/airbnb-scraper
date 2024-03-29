@@ -200,7 +200,7 @@ with tabs[0]:
     delta_competitors = "{:.2f}%".format(percentage_of_total_competitors)
 
     st.subheader("Dataset overview")
-    col1, col2, col3, col4 = st.columns([0.2, 0.2, 0.2, 0.4])
+    col1, col2, col3, col4 = st.columns([0.25, 0.25, 0.25, 0.25])
     with col1:
         st.metric(label=f"Total apartments scraped for {month_selection}", value=total_count)
     with col2:
@@ -212,7 +212,7 @@ with tabs[0]:
         # Construct the file path for the selected month's image using an f-string
         image_file_path = f"{month_selection}_2024.png"
         try:
-            st.image(image_file_path, width=200)
+            st.image(image_file_path, width=210)
         except Exception as e:
             st.error(f"An error occurred: {e}")
         
@@ -274,9 +274,7 @@ with tabs[0]:
     
     
     st.plotly_chart(fig_avg_price_livinparis, use_container_width=True)
-    
-    st.caption("Note: Negative percentages 🟥 indicate intervals where LivinParis' prices are higher on average compared to competitors.")
-    
+       
         
     
     pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
@@ -304,7 +302,7 @@ with tabs[0]:
     )
     
     #fig_percentage_diff.update_yaxes(title_text="Percentage Difference", title_standoff=25, autorange=True)
-
+    st.caption("Note: Negative percentages 🟥 indicate intervals where LivinParis' prices are higher on average compared to competitors.")
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
     
     
@@ -314,7 +312,7 @@ with tabs[0]:
     col1, col2, col3 = st.columns([0.2, 0.8, 0.2])
     with col1:
         st.download_button(
-            label="Download data as .csv",
+            label="Download data (.csv)",
             data=data.to_csv().encode('utf-8'),
             file_name='consolidated_data.csv',
             mime='text/csv',type="primary"
