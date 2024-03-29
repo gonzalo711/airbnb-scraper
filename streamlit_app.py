@@ -163,7 +163,7 @@ st.set_page_config(layout="wide")
 
 col1, col2= st.columns([0.8, 0.2])
 with col1:
-    st.title('🏡 Airbnb competitor pricing Analysis')
+    st.title('🏡 Airbnb pricing assistant 🤖')
     
     st.markdown("<hr style='border-top: 2px solid red; margin-top: 20px; margin-bottom: 20px'/>", unsafe_allow_html=True)
 with col2:
