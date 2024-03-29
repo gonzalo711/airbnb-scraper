@@ -385,8 +385,8 @@ with tabs[1]:
 with tabs[2]:
     # Selecting specific columns
     
-    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews', 'URL']
-    df_display = filtered_data_competitors_or_livinparis[columns_to_display].copy()
+    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews','Livinparis','Competitor', 'URL', ]
+    df_display = data[columns_to_display].copy()
     
     # Assuming df_display is your dataframe with the 'URL' column
     aggrid_interactive_table(df_display)
