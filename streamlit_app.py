@@ -210,7 +210,7 @@ with tabs[0]:
 
     st.divider()
 
-    col1, col2 = st.columns([0.3,0.7])
+    col1, col2 = st.columns([0.7,0.3])
     with col1:
         st.subheader("Pricing deep dive")
     with col2:
@@ -218,7 +218,7 @@ with tabs[0]:
         # Construct the file path for the selected month's image using an f-string
         image_file_path = f"{month_selection}_2024.png"
         try:
-            st.image(image_file_path, caption=f"{month_selection}")
+            st.image(image_file_path, caption=f"{month_selection}", width=200)
         except Exception as e:
             st.error(f"An error occurred: {e}")
         
