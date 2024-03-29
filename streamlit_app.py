@@ -343,7 +343,7 @@ with tabs[1]:
         filtered_data_competitors_or_livinparis,
         x='Price_per_night',
         color='Competitor',
-        color_discrete_map={'Yes': 'red', 'No': 'black'},
+        color_discrete_map={'Competitor': 'red', 'LivinParis': 'black'},
         barmode='overlay',
         nbins=6,  # Adjust the number of bins as needed
         range_x=[500, 3000],  # Adjust the range as needed
