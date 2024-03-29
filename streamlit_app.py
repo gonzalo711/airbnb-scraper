@@ -163,14 +163,14 @@ st.set_page_config(layout="wide")
 
 col1, col2= st.columns([0.8, 0.2])
 with col1:
-    st.title('🏡 Airbnb pricing assistant 🤖')
+    st.title('Airbnb pricing assistant 🤖🏡 ')
     
     st.markdown("<hr style='border-top: 2px solid red; margin-top: 20px; margin-bottom: 20px'/>", unsafe_allow_html=True)
 with col2:
     st.image("pictures/linvinparis.png")
 
 st.write("#")
-tabs = st.tabs(['Pricing benchmark 🔍','Review scraped results for an interval 🗓️', 'Explore the dataset 📚'])
+tabs = st.tabs(['Pricing benchmark 🔍','Inspect an interval 🗓️', 'Explore dataset 📚'])
 
 with tabs[0]:
     st.write("#")
@@ -329,13 +329,13 @@ with tabs[1]:
     filtered_data_month = filtered_data[filtered_data['Check_in'].dt.month_name() == month_selection]
     intervals_in_month = filtered_data_month['Interval'].unique()
     
-    col1, col2= st.columns([0.6, 0.4])
+    col1, col2= st.columns([0.8, 0.2])
     with col1:
         st.subheader("Pick an interval and bedrooms to check out the competitors 👀")
         interval_selection = st.selectbox('Select Interval', intervals_in_month)
         bedroom_selection_2 = st.selectbox('Select Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
     with col2:
-        st.image(f"{month_selection}_2024.png", width=200)
+        st.image(f"{month_selection}_2024.png", width=210)
         
         
     st.divider()
@@ -348,15 +348,11 @@ with tabs[1]:
     competitors_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Competitor'] == 'Yes'].shape[0]
     livinparis_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Livinparis'] == 'Yes'].shape[0]
     
-    col1, col2, col3 = st.columns([0.2, 0.8, 0.2])
-    with col1:
-        st.metric(label="Number of competitors scraped", value=competitors_interval_count)
-    with col2:
-        st.write("#")
-    with col3:
-        st.metric(label="Number of LivinParis appartments", value=livinparis_interval_count)
+    st.metric(label="Number of competitors scraped", value=competitors_interval_count)
+    s.write("#")
+    s.metric(label="Number of LivinParis appartments", value=livinparis_interval_count)
     
-    
+    st.divider()
     
     st.caption("Note: Competitor apts in 🟥 and LivinParis apts in ⬛")
     
