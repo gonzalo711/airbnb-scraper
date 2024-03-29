@@ -21,6 +21,12 @@ from datetime import datetime
 import plotly.express as px
 from st_aggrid import GridOptionsBuilder, AgGrid, GridUpdateMode, DataReturnMode
 
+from pandas.api.types import (
+    is_categorical_dtype,
+    is_datetime64_any_dtype,
+    is_numeric_dtype,
+    is_object_dtype,
+)
 
 # Ensure these libraries are in your requirements.txt
 
@@ -56,6 +62,72 @@ def load_and_merge_csv(bucket_name, file_paths):
             all_data = pd.concat([all_data, df], ignore_index=True)
     all_data.to_csv('final.csv', index=False)
     return all_data
+
+
+def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
+    modify = st.checkbox("Add filters")
+
+    if not modify:
+        return df
+
+    df = df.copy()
+
+    # Convert strings to datetime if possible
+    for col in df.columns:
+        if is_object_dtype(df[col]):
+            try:
+                df[col] = pd.to_datetime(df[col])
+            except Exception:
+                pass
+
+    # Remove timezone information for comparison
+    for col in df.columns:
+        if is_datetime64_any_dtype(df[col]):
+            df[col] = df[col].dt.tz_localize(None)
+
+    with st.container():
+        to_filter_columns = st.multiselect("Filter dataframe on", df.columns)
+        for column in to_filter_columns:
+            left, right = st.columns((1, 20))
+            if is_categorical_dtype(df[column]) or df[column].nunique() < 10:
+                # Categorical filter
+                user_cat_input = right.multiselect(
+                    f"Values for {column}",
+                    df[column].unique(),
+                    default=list(df[column].unique()),
+                )
+                df = df[df[column].isin(user_cat_input)]
+            elif is_numeric_dtype(df[column]):
+                # Numeric range filter
+                min_val = float(df[column].min())
+                max_val = float(df[column].max())
+                step = (max_val - min_val) / 100
+                user_num_input = right.slider(
+                    f"Values for {column}",
+                    min_value=min_val,
+                    max_value=max_val,
+                    value=(min_val, max_val),
+                    step=step,
+                )
+                df = df[df[column].between(*user_num_input)]
+            elif is_datetime64_any_dtype(df[column]):
+                # Date range filter
+                user_date_input = right.date_input(
+                    f"Values for {column}",
+                    value=(
+                        df[column].min(),
+                        df[column].max(),
+                    ),
+                )
+                if len(user_date_input) == 2:
+                    start_date, end_date = user_date_input
+                    df = df[df[column].between(start_date, end_date)]
+            else:
+                # String match filter
+                user_text_input = right.text_input(f"Substring in {column}")
+                df = df[df[column].astype(str).str.contains(user_text_input)]
+
+    return df
 
 
 #Function to clean the data
@@ -385,5 +457,8 @@ with tabs[2]:
     columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews','Livinparis','Competitor','Listing_id','URL' ]
     df_display = data[columns_to_display].copy()
     
-    # Assuming df_display is your dataframe with the 'URL' column
-    aggrid_interactive_table(df_display)
+    st.subheader('Filtered Data')
+    filtered_data = filter_dataframe(df_display)
+
+    # Display the filtered dataframe
+    st.dataframe(filtered_data)
