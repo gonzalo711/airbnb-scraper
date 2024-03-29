@@ -321,8 +321,21 @@ with tabs[1]:
     st.subheader("Pick an interval to check out the competitors 👀")
     interval_selection = st.selectbox('Select Interval', intervals_in_month)
     
+    st.divider()
     
-    filtered_data_interval = filtered_data_month[filtered_data_month['Interval'] == interval_selection]
+    filtered_data_competitors_or_livinparis = filtered_data_interval[
+    ((filtered_data_interval['Competitor'] == 'Yes') |
+    (filtered_data_interval['Livinparis'] == 'Yes')) &
+    (filtered_data_interval['Interval'] == interval_selection)
+    ]
+    
+    competitors_interval_count = filtered_data_interval[filtered_data['Competitor'] == 'Yes'].shape[0]
+    livinparis_interval_count = filtered_data_interval[filtered_data['Livinparis'] == 'Yes'].shape[0]
+    st.metric(label="Number of competitors scraped", value=competitors_interval_count)
+    st.metric(label="Number of LivinParis appartments", value=livinparis_interval_count)
+    
+    
+    
     columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews', 'URL']
     df_display = filtered_data_interval[columns_to_display].copy()
     
@@ -348,16 +361,14 @@ with tabs[1]:
     # Show the figure in the Streamlit app
     st.plotly_chart(fig, use_container_width=True)
     
-    col1, col2 = st.columns([0.8, 0.2])
-    with col1:
+    
+        
+        
         # Assuming df_display is your dataframe with the 'URL' column
         aggrid_interactive_table(df_display)
         
     with col2:
-        competitors_interval_count = filtered_data_interval[filtered_data['Competitor'] == 'Yes'].shape[0]
-        livinparis_interval_count = filtered_data_interval[filtered_data['Livinparis'] == 'Yes'].shape[0]
-        st.metric(label="Number of competitors scraped", value=competitors_interval_count)
-        st.metric(label="Number of LivinParis appartments", value=livinparis_interval_count)
+        
         
 
 
