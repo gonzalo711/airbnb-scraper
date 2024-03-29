@@ -285,7 +285,8 @@ with tabs[0]:
     x=transposed_pivot.columns.tolist(),  # These are now the intervals
     y=transposed_pivot.index.tolist(),  # This is now 'Bedrooms'
     annotation_text=annotation_text,
-    colorscale='RdGn',
+    colorscale='RdYlGn',
+    font_colors=['black', 'black'],
     showscale=True
     )
     
