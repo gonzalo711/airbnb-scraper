@@ -342,7 +342,7 @@ with tabs[1]:
     filtered_data_competitors_or_livinparis = filtered_data_month[
     ((filtered_data_month['Competitor'] == 'Yes') |
     (filtered_data_month['Livinparis'] == 'Yes')) &
-    (filtered_data_month['Interval'] == interval_selection) & & (filtered_data_month['Bedrooms'] == bedroom_selection_2]
+    (filtered_data_month['Interval'] == interval_selection) & (filtered_data_month['Bedrooms'] == bedroom_selection_2)]
     
     competitors_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Competitor'] == 'Yes'].shape[0]
     livinparis_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Livinparis'] == 'Yes'].shape[0]
