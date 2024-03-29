@@ -316,10 +316,9 @@ with tabs[1]:
         x='Price_per_night',
         color='Competitor',
         color_discrete_map={'Yes': 'red', 'No': 'black'},
-        barmode='overlay',  # 'overlay' or 'group' based on how you want to display the bars
-        text='Listing_id',
-        nbins=6,  # Adjust this based on your data's range to get a bin size around 500
-        #range_x=[500, 3000],  # Set the range for the x-axis
+        barmode='overlay',
+        nbins=6,  # Adjust the number of bins as needed
+        range_x=[500, 3000],  # Adjust the range as needed
         title='Distribution of Average Price per Night'
     )
 
