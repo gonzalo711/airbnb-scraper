@@ -260,9 +260,10 @@ with tabs[0]:
 
     fig_avg_price_livinparis.update_layout(title_text='Livinparis Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
     
-    st.caption("Note: Negative percentages 🟥 indicate intervals where LivinParis' prices are higher on average compared to competitors.")
+    
     st.plotly_chart(fig_avg_price_livinparis, use_container_width=True)
-
+    
+    st.caption("Note: Negative percentages 🟥 indicate intervals where LivinParis' prices are higher on average compared to competitors.")
     
         
     
@@ -288,6 +289,9 @@ with tabs[0]:
         xaxis_title="Interval",
         yaxis_title=""
     )
+    
+    fig_percentage_diff.update_yaxes(title_text="Percentage Difference", title_standoff=25, autorange=True)
+
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
     
     
@@ -342,8 +346,9 @@ with tabs[1]:
     )
 
     # Show the figure in the Streamlit app
-    st.plotly_chart(fig)
-
+    st.plotly_chart(fig, use_container_width=True)
+    
+    col1, col2 = st.columns([0.8, 0.2])
     with col1:
         # Assuming df_display is your dataframe with the 'URL' column
         aggrid_interactive_table(df_display)
