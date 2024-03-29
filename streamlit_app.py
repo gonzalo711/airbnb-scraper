@@ -214,10 +214,9 @@ with tabs[0]:
     with col1:
         st.subheader("Pricing deep dive")
     with col2:
-        
         # Display the calendar picture
         # Construct the file path for the selected month's image
-        image_file_path = f'pictures/{month_selection}_2024.png'
+        image_file_path = f"pictures/{month_selection}_2024.png"
         st.image(image_file_path, caption=f"{month_selection}")
         
     st.write("#")
