@@ -217,7 +217,7 @@ with tabs[0]:
         # Display the calendar picture
         # Construct the file path for the selected month's image
         image_file_path = f"pictures/{month_selection}_2024.png"
-        st.image(image_file_path, caption=f"{month_selection}")
+        st.image(image_file_path)
         
     st.write("#")
     # Plotly Heatmap for Average Price Per Night
