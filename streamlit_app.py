@@ -328,13 +328,13 @@ with tabs[1]:
     filtered_data_month = filtered_data[filtered_data['Check_in'].dt.month_name() == month_selection]
     intervals_in_month = filtered_data_month['Interval'].unique()
     
-    col1, col2= st.columns([0.7, 0.3])
+    col1, col2= st.columns([0.6, 0.4])
     with col1:
         st.subheader("Pick an interval and bedrooms to check out the competitors 👀")
         interval_selection = st.selectbox('Select Interval', intervals_in_month)
         bedroom_selection_2 = st.selectbox('Select Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
     with col2:
-        st.image(f"{month_selection}_2024.png", width=150)
+        st.image(f"{month_selection}_2024.png", width=200)
         
         
     st.divider()
