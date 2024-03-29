@@ -210,7 +210,7 @@ with tabs[0]:
 
     st.divider()
 
-    col1, col2 = st.columns([0.5,0.5])
+    col1, col2 = st.columns([0.7,0.3])
     with col1:
         st.subheader(f"Pricing deep dive for {month_selection}")
     with col2:
@@ -218,7 +218,7 @@ with tabs[0]:
         # Construct the file path for the selected month's image using an f-string
         image_file_path = f"{month_selection}_2024.png"
         try:
-            st.image(image_file_path, caption=f"{month_selection}", width=220)
+            st.image(image_file_path, width=150)
         except Exception as e:
             st.error(f"An error occurred: {e}")
         
@@ -334,7 +334,7 @@ with tabs[1]:
         interval_selection = st.selectbox('Select Interval', intervals_in_month)
         bedroom_selection_2 = st.selectbox('Select Number of Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
     with col2:
-        st.image(image_file_path, caption=f"{month_selection}", width=220)
+        st.image(f"{month_selection}_2024.png", width=150)
         
         
     st.divider()
