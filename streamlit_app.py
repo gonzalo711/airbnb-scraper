@@ -334,16 +334,23 @@ with tabs[1]:
     
 
     # Convert URLs to clickable links
-    df_display['URL'] = df_display['URL'].apply(make_clickable)
+        def aggrid_interactive_table(df):
+            # Convert the 'URL' column to clickable links using HTML anchor tags
+            df['URL'] = df['URL'].apply(lambda x: f'<a href="{x}" target="_blank">{x}</a>')
 
-    st.write('Competitor Data')
-    st.markdown(df_display.to_html(escape=False), unsafe_allow_html=True)
-    
-    col1, col2 = st.columns([0.8, 0.2])
+            # Create an interactive grid with AgGrid
+            gb = GridOptionsBuilder.from_dataframe(df)
+            gb.configure_pagination()  # Enable pagination
+            gb.configure_side_bar()  # Enable a side bar
+            gb.configure_default_column(groupable=True, value=True, enableRowGroup=True, aggFunc='sum', editable=True)
+            grid_options = gb.build()
+
+            # Display the grid
+            AgGrid(df, gridOptions=grid_options, enable_enterprise_modules=True, allow_unsafe_jscode=True)
     
     with col1:
-        st.dataframe(df_display.style.format({'URL': make_clickable}), height=300)  # adjust height as needed
-    
+        # Assuming df_display is your dataframe with the 'URL' column
+        aggrid_interactive_table(df_display)
         
     with col2:
         competitors_interval_count = filtered_data_interval[filtered_data['Competitor'] == 'Yes'].shape[0]
