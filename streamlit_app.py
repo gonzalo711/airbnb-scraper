@@ -199,21 +199,15 @@ with tabs[0]:
     delta_livin_paris = "{:.2f}%".format(percentage_of_total_livin_paris)
     delta_competitors = "{:.2f}%".format(percentage_of_total_competitors)
 
-    st.subheader("What is my data sample?")
-    col1, col2, col3 = st.columns([0.33, 0.33, 0.33])
+    st.subheader("Dataset overview")
+    col1, col2, col3, col4 = st.columns([0.2, 0.2, 0.2, 0.4])
     with col1:
         st.metric(label=f"Total apartments scraped for {month_selection}", value=total_count)
     with col2:
         st.metric(label=f"LivinParis apartments scraped in {month_selection}", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
     with col3:
         st.metric(label=f"Competitor Apartments scraped in {month_selection}", value=competitors_count, delta=delta_competitors, delta_color="off")
-
-    st.divider()
-
-    col1, col2 = st.columns([0.6,0.4])
-    with col1:
-        st.subheader(f"Pricing deep dive for {month_selection}")
-    with col2:
+    with col4:
         # Display the calendar picture
         # Construct the file path for the selected month's image using an f-string
         image_file_path = f"{month_selection}_2024.png"
@@ -222,7 +216,16 @@ with tabs[0]:
         except Exception as e:
             st.error(f"An error occurred: {e}")
         
-    st.write("#")
+    st.divider()
+
+    col1, col2 = st.columns([0.6,0.4])
+    with col1:
+        st.subheader(f"Pricing deep dive for {month_selection}")
+    with col2:
+        st.write("#")
+        
+        
+    
     # Plotly Heatmap for Average Price Per Night
     filtered_data_competitor= filtered_data[filtered_data['Livinparis'] == 'Yes']
     filtered_data_livinparis= filtered_data[filtered_data['Competitor'] == 'Yes']
