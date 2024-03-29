@@ -328,19 +328,19 @@ with tabs[1]:
     (filtered_data_month['Livinparis'] == 'Yes')) &
     (filtered_data_month['Interval'] == interval_selection)]
     
-    competitors_interval_count = filtered_data_interval[filtered_data['Competitor'] == 'Yes'].shape[0]
-    livinparis_interval_count = filtered_data_interval[filtered_data['Livinparis'] == 'Yes'].shape[0]
+    competitors_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Competitor'] == 'Yes'].shape[0]
+    livinparis_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Livinparis'] == 'Yes'].shape[0]
     st.metric(label="Number of competitors scraped", value=competitors_interval_count)
     st.metric(label="Number of LivinParis appartments", value=livinparis_interval_count)
     
     
     
     columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews', 'URL']
-    df_display = filtered_data_interval[columns_to_display].copy()
+    df_display = filtered_data_competitors_or_livinparis[columns_to_display].copy()
     
     
     fig = px.histogram(
-        filtered_data_interval,
+        filtered_data_competitors_or_livinparis,
         x='Price_per_night',
         color='Competitor',
         color_discrete_map={'Yes': 'red', 'No': 'black'},
