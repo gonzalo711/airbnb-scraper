@@ -218,7 +218,7 @@ with tabs[0]:
         # Construct the file path for the selected month's image using an f-string
         image_file_path = f"{month_selection}_2024.png"
         try:
-            st.image(image_file_path, caption=f"{month_selection}", width=500)
+            st.image(image_file_path, caption=f"{month_selection}", width=220)
         except Exception as e:
             st.error(f"An error occurred: {e}")
         
@@ -311,7 +311,7 @@ with tabs[0]:
     col1, col2, col3 = st.columns([0.2, 0.8, 0.2])
     with col1:
         st.download_button(
-            label="Download data as CSV",
+            label="Download data as .csv",
             data=data.to_csv().encode('utf-8'),
             file_name='consolidated_data.csv',
             mime='text/csv',type="primary"
@@ -357,7 +357,7 @@ with tabs[1]:
         filtered_data_competitors_or_livinparis,
         x='Price_per_night',
         color='Competitor',
-        color_discrete_map={'Competitor': 'red', 'LivinParis': 'black'},
+        color_discrete_map={'Yes': 'red', 'No': 'black'},
         barmode='overlay',
         nbins=8,  # Adjust the number of bins as needed
         range_x=[400, 3000],  # Adjust the range as needed
