@@ -215,7 +215,12 @@ with tabs[0]:
         st.subheader("Pricing deep dive")
     with col2:
         # Display the calendar picture
-        st.image("{month_selection}_2024.png")
+        # Construct the file path for the selected month's image using an f-string
+        image_file_path = f"{month_selection}_2024.png"
+        try:
+            st.image(image_file_path, caption=f"{month_selection}")
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
         
     st.write("#")
     # Plotly Heatmap for Average Price Per Night
