@@ -210,10 +210,17 @@ with tabs[0]:
 
     st.divider()
 
+    col1, col2 = st.columns([0.7,0.3])
+    with col1:
+        st.subheader("Pricing deep dive")
+    with col2:
         
-    st.subheader("Pricing deep dive")
+        # Display the calendar picture
+        # Construct the file path for the selected month's image
+        image_file_path = f'pictures/{month_selection}_2024.png'
+        st.image(image_file_path, caption=f"{month_selection}")
+        
     st.write("#")
-
     # Plotly Heatmap for Average Price Per Night
     filtered_data_competitor= filtered_data[filtered_data['Livinparis'] == 'Yes']
     filtered_data_livinparis= filtered_data[filtered_data['Competitor'] == 'Yes']
