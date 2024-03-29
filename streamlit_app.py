@@ -210,7 +210,7 @@ with tabs[0]:
 
     st.divider()
 
-    col1, col2 = st.columns([0.7,0.3])
+    col1, col2 = st.columns([0.6,0.4])
     with col1:
         st.subheader(f"Pricing deep dive for {month_selection}")
     with col2:
@@ -218,7 +218,7 @@ with tabs[0]:
         # Construct the file path for the selected month's image using an f-string
         image_file_path = f"{month_selection}_2024.png"
         try:
-            st.image(image_file_path, width=150)
+            st.image(image_file_path, width=200)
         except Exception as e:
             st.error(f"An error occurred: {e}")
         
@@ -385,7 +385,7 @@ with tabs[1]:
 with tabs[2]:
     # Selecting specific columns
     
-    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews','Livinparis','Competitor', 'URL', ]
+    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews','Livinparis','Competitor','Listing_id', 'URL' ]
     df_display = data[columns_to_display].copy()
     
     # Assuming df_display is your dataframe with the 'URL' column
