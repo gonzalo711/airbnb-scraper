@@ -322,12 +322,11 @@ with tabs[1]:
     interval_selection = st.selectbox('Select Interval', intervals_in_month)
     
     st.divider()
-    
-    filtered_data_competitors_or_livinparis = filtered_data_interval[
-    ((filtered_data_interval['Competitor'] == 'Yes') |
-    (filtered_data_interval['Livinparis'] == 'Yes')) &
-    (filtered_data_interval['Interval'] == interval_selection)
-    ]
+
+    filtered_data_competitors_or_livinparis = filtered_data_month[
+    ((filtered_data_month['Competitor'] == 'Yes') |
+    (filtered_data_month['Livinparis'] == 'Yes')) &
+    (filtered_data_month['Interval'] == interval_selection)]
     
     competitors_interval_count = filtered_data_interval[filtered_data['Competitor'] == 'Yes'].shape[0]
     livinparis_interval_count = filtered_data_interval[filtered_data['Livinparis'] == 'Yes'].shape[0]
