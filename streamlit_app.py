@@ -332,7 +332,7 @@ with tabs[1]:
     with col1:
         st.subheader("Pick an interval and bedrooms to check out the competitors 👀")
         interval_selection = st.selectbox('Select Interval', intervals_in_month)
-        bedroom_selection_2 = st.selectbox('Select Number of Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
+        bedroom_selection_2 = st.selectbox('Select Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
     with col2:
         st.image(f"{month_selection}_2024.png", width=150)
         
