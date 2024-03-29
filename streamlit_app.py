@@ -454,6 +454,7 @@ with tabs[2]:
     
     columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews','Livinparis','Competitor','Listing_id','URL' ]
     df_display = data[columns_to_display].copy()
+    df_display['Listing_id'] = df_display['Listing_id'].astype(str)
     
     st.subheader('Filter you data')
     filtered_data = filter_dataframe(df_display)
