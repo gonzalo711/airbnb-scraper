@@ -362,12 +362,12 @@ with tabs[1]:
     st.plotly_chart(fig, use_container_width=True)
     
     
+    st.divider()
+
         
+    # Assuming df_display is your dataframe with the 'URL' column
+    aggrid_interactive_table(df_display)
         
-        # Assuming df_display is your dataframe with the 'URL' column
-        aggrid_interactive_table(df_display)
-        
-    with col2:
         
         
 
