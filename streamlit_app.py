@@ -227,8 +227,8 @@ with tabs[0]:
         
     
     # Plotly Heatmap for Average Price Per Night
-    filtered_data_competitor= filtered_data[filtered_data['Livinparis'] == 'Yes']
-    filtered_data_livinparis= filtered_data[filtered_data['Competitor'] == 'Yes']
+    filtered_data_competitor= filtered_data[filtered_data['Competitor'] == 'Yes']
+    filtered_data_livinparis= filtered_data[filtered_data['Livinparis'] == 'Yes']
     
     pivot_avg_price_competitor = filtered_data_competitor.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
     pivot_avg_price_livinparis = filtered_data_livinparis.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
@@ -384,7 +384,7 @@ with tabs[1]:
 with tabs[2]:
     # Selecting specific columns
     
-    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews','Livinparis','Competitor','Listing_id', 'URL' ]
+    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews','Livinparis','Competitor','Listing_id','URL' ]
     df_display = data[columns_to_display].copy()
     
     # Assuming df_display is your dataframe with the 'URL' column
