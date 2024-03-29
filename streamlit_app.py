@@ -358,7 +358,7 @@ with tabs[1]:
         x='Price_per_night',
         color='Competitor',
         color_discrete_map={'Yes': 'red', 'No': 'black'},
-        barmode='overlay',
+        barmode='group',  # Change to 'group' to prevent overlap
         nbins=8,  # Adjust the number of bins as needed
         range_x=[400, 3000],  # Adjust the range as needed
         title='Distribution of Average Price per Night'
@@ -367,15 +367,14 @@ with tabs[1]:
     fig.update_layout(
         xaxis_title='Average Price per Night',
         yaxis_title='Count',
-        legend=dict(traceorder='normal', font=dict(size=12)),
+        showlegend=False  # Add this line to remove the legend
     )
 
     # Show the figure in the Streamlit app
     st.plotly_chart(fig, use_container_width=True)
-    
-    
+
     st.divider()
-        
+            
 
 with tabs[2]:
     # Selecting specific columns
