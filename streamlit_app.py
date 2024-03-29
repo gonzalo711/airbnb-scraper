@@ -200,8 +200,6 @@ with tabs[0]:
 
         
     st.subheader("Pricing deep dive")
-    
-    st.write("#")
     st.write("#")
 
     # Plotly Heatmap for Average Price Per Night
@@ -249,6 +247,8 @@ with tabs[0]:
         st.divider()
 
     fig_avg_price_livinparis.update_layout(title_text='Livinparis Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
+    
+    st.caption("Note: Negative percentages 🟥 indicate intervals where LivinParis' prices are higher on average compared to competitors.")
     st.plotly_chart(fig_avg_price_livinparis, use_container_width=True)
 
     
@@ -278,7 +278,7 @@ with tabs[0]:
     )
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
     
-    st.caption("Note: Negative percentages 🟥 indicate intervals where LivinParis' prices are higher on average compared to competitors.")
+    
     
     st.divider()
     
