@@ -309,7 +309,7 @@ with tabs[0]:
     
     st.divider()
     
-    col1, col2, col3 = st.columns([0.2, 0.8, 0.2])
+    col1, col2, col3 = st.columns([0.2, 0.8, 0.1])
     with col1:
         st.download_button(
             label="Download data (.csv)",
@@ -349,7 +349,6 @@ with tabs[1]:
     livinparis_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Livinparis'] == 'Yes'].shape[0]
     
     st.metric(label="Number of competitors scraped", value=competitors_interval_count)
-    s.write("#")
     s.metric(label="Number of LivinParis appartments", value=livinparis_interval_count)
     
     st.divider()
