@@ -210,7 +210,7 @@ with tabs[0]:
 
     st.divider()
 
-    col1, col2 = st.columns([0.7,0.3])
+    col1, col2 = st.columns([0.3,0.7])
     with col1:
         st.subheader("Pricing deep dive")
     with col2:
