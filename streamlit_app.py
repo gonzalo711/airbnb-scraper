@@ -341,8 +341,7 @@ with tabs[1]:
     
     
     
-    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews', 'URL']
-    df_display = filtered_data_competitors_or_livinparis[columns_to_display].copy()
+
     
     
     fig = px.histogram(
@@ -368,20 +367,13 @@ with tabs[1]:
     
     
     st.divider()
-
         
-    # Assuming df_display is your dataframe with the 'URL' column
-    aggrid_interactive_table(df_display)
-        
-        
-        
-
 
 with tabs[2]:
     # Selecting specific columns
-    columns_to_display = ['Title', 'Price_per_night', 'Check_in', 'Check_out', 'URL']
-    filtered_subset = filtered_data[columns_to_display]
     
-    AgGrid(filtered_subset)
-    # Displaying the subset DataFrame
-    #st.dataframe(filtered_subset)
+    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews', 'URL']
+    df_display = filtered_data_competitors_or_livinparis[columns_to_display].copy()
+    
+    # Assuming df_display is your dataframe with the 'URL' column
+    aggrid_interactive_table(df_display)
