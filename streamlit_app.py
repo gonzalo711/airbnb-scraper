@@ -328,15 +328,21 @@ with tabs[1]:
     filtered_data_month = filtered_data[filtered_data['Check_in'].dt.month_name() == month_selection]
     intervals_in_month = filtered_data_month['Interval'].unique()
     
-    st.subheader("Pick an interval to check out the competitors 👀")
-    interval_selection = st.selectbox('Select Interval', intervals_in_month)
-    
+    col1, col2= st.columns([0.7, 0.3])
+    with col1:
+        st.subheader("Pick an interval and bedrooms to check out the competitors 👀")
+        interval_selection = st.selectbox('Select Interval', intervals_in_month)
+        bedroom_selection_2 = st.selectbox('Select Number of Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
+    with col2:
+        st.image(image_file_path, caption=f"{month_selection}", width=220)
+        
+        
     st.divider()
 
     filtered_data_competitors_or_livinparis = filtered_data_month[
     ((filtered_data_month['Competitor'] == 'Yes') |
     (filtered_data_month['Livinparis'] == 'Yes')) &
-    (filtered_data_month['Interval'] == interval_selection)]
+    (filtered_data_month['Interval'] == interval_selection) & & (filtered_data_month['Bedrooms'] == bedroom_selection_2]
     
     competitors_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Competitor'] == 'Yes'].shape[0]
     livinparis_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Livinparis'] == 'Yes'].shape[0]
