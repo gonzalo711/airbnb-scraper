@@ -348,8 +348,11 @@ with tabs[1]:
     competitors_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Competitor'] == 'Yes'].shape[0]
     livinparis_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Livinparis'] == 'Yes'].shape[0]
     
-    st.metric(label="Number of competitors scraped", value=competitors_interval_count)
-    st.metric(label="Number of LivinParis appartments", value=livinparis_interval_count)
+    col1, col2= st.columns([0.4, 0.4])
+    with col1:
+        st.metric(label="Number of competitors scraped", value=competitors_interval_count)
+    with col2:
+        st.metric(label="Number of LivinParis appartments", value=livinparis_interval_count)
     
     st.divider()
     
