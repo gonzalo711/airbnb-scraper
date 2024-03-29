@@ -51,7 +51,10 @@ fs = gcsfs.GCSFileSystem(token=gcp_credentials)
 bucket_name = 'us-central1-airbnbcomposer-b06b3309-bucket'
 file_paths = ['data/airbnb_final_listings_2024_4_final.csv',
               'data/airbnb_final_listings_2024_5_final.csv',
-              'data/airbnb_final_listings_2024_6_final.csv']
+              'data/airbnb_final_listings_2024_6_final.csv',
+              'data/airbnb_final_listings_2024_7_final.csv',
+              'data/airbnb_final_listings_2024_8_final.csv',
+              'data/airbnb_final_listings_2024_9_final.csv']
 
 # Function to load data
 def load_and_merge_csv(bucket_name, file_paths):
@@ -177,7 +180,7 @@ def clean_transform_data(df):
 
 # Load, clean, and transform data
 bucket_name = 'us-central1-airbnbcomposer-b06b3309-bucket/data'
-file_paths = ['airbnb_final_listings_2024_4_final.csv', 'airbnb_final_listings_2024_5_final.csv', 'airbnb_final_listings_2024_6_final.csv']
+file_paths = ['airbnb_final_listings_2024_4_final.csv', 'airbnb_final_listings_2024_5_final.csv', 'airbnb_final_listings_2024_6_final.csv', 'airbnb_final_listings_2024_7_final.csv', 'airbnb_final_listings_2024_8_final.csv', 'airbnb_final_listings_2024_9_final.csv']
 data = load_and_merge_csv(bucket_name, file_paths)
 data = clean_transform_data(data)
 
