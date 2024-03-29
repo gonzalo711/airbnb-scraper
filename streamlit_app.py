@@ -215,7 +215,7 @@ with tabs[0]:
         st.subheader("Pricing deep dive")
     with col2:
         # Display the calendar picture
-        st.image(f'pictures/{month_selection}_2024.png')
+        st.image("{month_selection}_2024.png")
         
     st.write("#")
     # Plotly Heatmap for Average Price Per Night
