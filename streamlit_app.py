@@ -271,13 +271,13 @@ with tabs[0]:
 
     transposed_pivot = pivot_percentage_diff.T
     
-    annotation_text = np.vectorize(lambda x: f"{int(round(x))}%")(transposed_pivot.values)
+    annotation_text = np.vectorize(lambda x: "{}%".format(int(round(x))))(transposed_pivot.values)
 
     fig_percentage_diff = ff.create_annotated_heatmap(
     z=transposed_pivot.values,  # Note that we are using the transposed pivot now
     x=transposed_pivot.columns.tolist(),  # These are now the intervals
     y=transposed_pivot.index.tolist(),  # This is now 'Bedrooms'
-    annotation_text=np.around(transposed_pivot.values).astype(str),
+    annotation_text=annotation_text,,
     colorscale='RdYlGn',
     showscale=True
     )
@@ -290,7 +290,7 @@ with tabs[0]:
         yaxis_title=""
     )
     
-    fig_percentage_diff.update_yaxes(title_text="Percentage Difference", title_standoff=25, autorange=True)
+    #fig_percentage_diff.update_yaxes(title_text="Percentage Difference", title_standoff=25, autorange=True)
 
     st.plotly_chart(fig_percentage_diff, use_container_width=True)
     
