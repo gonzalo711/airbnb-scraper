@@ -191,7 +191,7 @@ def calculate_percentage_difference(livin_paris_data, competitors_data):
     combined = pd.merge(avg_price_livin, avg_price_comp, on='Interval', suffixes=('_livin', '_comp'))
     
     # Calculating the percentage difference
-    combined['Percentage Difference'] = (combined['Price_per_night_livin'] - combined['Price_per_night_comp']) / combined['Price_per_night_comp'] * 100
+    combined['Percentage Difference'] = (combined['Price_per_night_comp']-combined['Price_per_night_livin']) / combined['Price_per_night_comp'] * 100
     
     # Pivot table for visualization
     percentage_difference_pivot = combined.pivot_table(index='Interval', values='Percentage Difference', aggfunc='mean').fillna(0)
@@ -344,8 +344,6 @@ with tabs[0]:
 
     fig_avg_price_livinparis.update_layout(title_text='Livinparis Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
     st.plotly_chart(fig_avg_price_livinparis, use_container_width=True)
-
-        
     
     pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
 
@@ -457,7 +455,7 @@ with tabs[2]:
     columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews','Livinparis','Competitor','Listing_id','URL' ]
     df_display = data[columns_to_display].copy()
     
-    st.subheader('Filtered Data')
+    st.subheader('Filter you data')
     filtered_data = filter_dataframe(df_display)
 
     # Display the filtered dataframe
