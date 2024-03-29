@@ -335,7 +335,7 @@ with tabs[1]:
         interval_selection = st.selectbox('Select Interval', intervals_in_month)
         bedroom_selection_2 = st.selectbox('Select Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
     with col2:
-        st.image(f"pictures/{month_selection}_2024.png", width=210)
+        st.image(f"/pictures/{month_selection}_2024.png", width=210)
         
         
     st.divider()

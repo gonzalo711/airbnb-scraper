@@ -15,6 +15,11 @@ This data app shows a simple demonstration of an interactive data explorer that 
 ## GitHub Codespaces
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/dataprofessor/movies-explorer?quickstart=1)
+[![ChatGPT](https://chat.openai.com/): The snitch that kept whispering to me what I was doing wrong when the code errors were driving me crazy.
+[![Streamlit Documentation](https://docs.streamlit.io/): Documentation checked to know how to manage this beast.
+
+
+
 
 ## Reference
 
