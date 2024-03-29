@@ -278,11 +278,11 @@ with tabs[0]:
     x=transposed_pivot.columns.tolist(),  # These are now the intervals
     y=transposed_pivot.index.tolist(),  # This is now 'Bedrooms'
     annotation_text=annotation_text,
-    colorscale='RdYlGn',
+    colorscale='RdGn',
     showscale=True
     )
     
-    fig_percentage_diff.update_traces(zmin=-60, zmax=60)
+    fig_percentage_diff.update_traces(zmin=-50, zmax=50)
 
     fig_percentage_diff.update_layout(
         title_text='LivinParis vs Competitors 🥊',
