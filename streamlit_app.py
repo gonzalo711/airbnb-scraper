@@ -330,8 +330,14 @@ with tabs[1]:
     
     competitors_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Competitor'] == 'Yes'].shape[0]
     livinparis_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Livinparis'] == 'Yes'].shape[0]
-    st.metric(label="Number of competitors scraped", value=competitors_interval_count)
-    st.metric(label="Number of LivinParis appartments", value=livinparis_interval_count)
+    
+    col1, col2, col3 = st.columns([0.2, 0.8, 0.2])
+    with col1:
+        st.metric(label="Number of competitors scraped", value=competitors_interval_count)
+    with col2:
+        st.write("#")
+    with col3:
+        st.metric(label="Number of LivinParis appartments", value=livinparis_interval_count)
     
     
     
@@ -345,15 +351,15 @@ with tabs[1]:
         color='Competitor',
         color_discrete_map={'Competitor': 'red', 'LivinParis': 'black'},
         barmode='overlay',
-        nbins=6,  # Adjust the number of bins as needed
-        range_x=[500, 3000],  # Adjust the range as needed
+        nbins=8,  # Adjust the number of bins as needed
+        range_x=[400, 3000],  # Adjust the range as needed
         title='Distribution of Average Price per Night'
     )
 
     fig.update_layout(
         xaxis_title='Average Price per Night',
         yaxis_title='Count',
-        legend_title='Source',
+        legend_title='Type',
         legend=dict(traceorder='normal', font=dict(size=12)),
     )
 
