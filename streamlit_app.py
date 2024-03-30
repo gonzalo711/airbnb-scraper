@@ -455,7 +455,7 @@ with tabs[1]:
 with tabs[2]:
     # Selecting specific columns
     
-    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews','Livinparis','Competitor','Listing_id','URL' ]
+    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews','Livinparis','Competitor','Check_in','Check_out','Listing_id','URL' ]
     df_display = data[columns_to_display].copy()
     df_display['Listing_id'] = df_display['Listing_id'].astype(str)
     
