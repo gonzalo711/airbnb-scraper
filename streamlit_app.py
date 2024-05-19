@@ -28,12 +28,11 @@ from pandas.api.types import (
 
 # Define your local file paths
 file_paths = [
-    'airbnb_final_listings_2024_4_final.csv',
-    'airbnb_final_listings_2024_5_final.csv',
-    'airbnb_final_listings_2024_6_final.csv',
-    'airbnb_final_listings_2024_7_final.csv',
-    'airbnb_final_listings_2024_8_final.csv',
-    'airbnb_final_listings_2024_9_final.csv'
+    'airbnb_final_listings_2024_6_final_19-05-2024',
+    'airbnb_final_listings_2024_7_final_19-05-2024',
+    'airbnb_final_listings_2024_8_final_19-05-2024',
+    'airbnb_final_listings_2024_9_final_19-05-2024',
+    'airbnb_final_listings_2024_10_final_19-05-2024'
 ]
 
 # Function to load data
