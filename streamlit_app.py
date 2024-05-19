@@ -28,12 +28,12 @@ from pandas.api.types import (
 
 # Define your local file paths
 file_paths = [
-    'airbnb_final_listings_2024_5_final_19-05-2024.csv',
-    'airbnb_final_listings_2024_6_final_19-05-2024.csv',
-    'airbnb_final_listings_2024_7_final_19-05-2024.csv',
-    'airbnb_final_listings_2024_8_final_19-05-2024.csv',
-    'airbnb_final_listings_2024_9_final_19-05-2024.csv',
-    'airbnb_final_listings_2024_10_final_19-05-2024.csv',
+    'airbnb_final_listings_2024_4_final.csv',
+    'airbnb_final_listings_2024_5_final.csv',
+    'airbnb_final_listings_2024_6_final.csv',
+    'airbnb_final_listings_2024_7_final.csv',
+    'airbnb_final_listings_2024_8_final.csv',
+    'airbnb_final_listings_2024_9_final.csv'
 ]
 
 # Function to load data
@@ -257,5 +257,187 @@ with tabs[0]:
     with col2:
         st.metric(label=f"LivinParis apartments scraped in {month_selection}", value=livin_paris_count, delta=delta_livin_paris,delta_color="off")
     with col3:
-        st.metric(label=f"Competitor Apartments scraped in {month_selection}", value=competitors_count, delta=delta_competitors, delta
+        st.metric(label=f"Competitor Apartments scraped in {month_selection}", value=competitors_count, delta=delta_competitors, delta_color="off")
+    with col4:
+        # Display the calendar picture
+        # Construct the file path for the selected month's image using an f-string
+        image_file_path = f"{month_selection}_2024.png"
+        try:
+            st.image(image_file_path, width=210)
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
+        
+    st.divider()
+
+    col1, col2 = st.columns([0.6,0.4])
+    with col1:
+        st.subheader(f"Pricing deep dive for {month_selection}")
+    with col2:
+        st.write("#")
+        
+        
+    
+    # Plotly Heatmap for Average Price Per Night
+    filtered_data_competitor= filtered_data[filtered_data['Competitor'] == 'Yes']
+    filtered_data_livinparis= filtered_data[filtered_data['Livinparis'] == 'Yes']
+    
+    pivot_avg_price_competitor = filtered_data_competitor.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
+    pivot_avg_price_livinparis = filtered_data_livinparis.pivot_table(index='Bedrooms', columns='Interval', values='Price_per_night', aggfunc='mean').fillna(0)
+    annotation_text_competitor = np.vectorize(lambda x: "€{:.0f}".format(x))(pivot_avg_price_competitor.values)
+    annotation_text_livinparis = np.vectorize(lambda x: "€{:.0f}".format(x))(pivot_avg_price_livinparis.values)
+
+
+
+    fig_avg_price_competitor = ff.create_annotated_heatmap(
+        z=pivot_avg_price_competitor.values,
+        x=pivot_avg_price_competitor.columns.tolist(),
+        y=pivot_avg_price_competitor.index.tolist(),
+        annotation_text=annotation_text_competitor,
+        colorscale='blues',
+        showscale=True
+    )
+    
+    fig_avg_price_livinparis = ff.create_annotated_heatmap(
+    z=pivot_avg_price_livinparis.values,
+    x=pivot_avg_price_livinparis.columns.tolist(),
+    y=pivot_avg_price_livinparis.index.tolist(),
+    annotation_text=annotation_text_livinparis,
+    colorscale='blues',
+    showscale=True
+    )
+    
+    col1, col2= st.columns([0.1, 0.9])
+    with col1:
+        st.image("pictures/airbnb.png")
+    with col2:
+        st.divider()
+    fig_avg_price_competitor.update_layout(title_text='Competitor Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
+    st.plotly_chart(fig_avg_price_competitor, use_container_width=True)
+    
+    
+    col1, col2= st.columns([0.1, 0.9])
+    with col1:
+        st.image("pictures/linvinparis.png")
+    with col2:
+        st.divider()
+
+    fig_avg_price_livinparis.update_layout(title_text='Livinparis Average Price Per Night 💵', xaxis_title="Interval", yaxis_title="Bedrooms")
+    st.plotly_chart(fig_avg_price_livinparis, use_container_width=True)
+    
+    pivot_percentage_diff = calculate_percentage_difference(filtered_livin_paris, filtered_competitors)
+
+    transposed_pivot = pivot_percentage_diff.T
+    
+    annotation_text = np.vectorize(lambda x: "{}%".format(int(round(x))))(transposed_pivot.values)
+
+    fig_percentage_diff = ff.create_annotated_heatmap(
+    z=transposed_pivot.values,  # Note that we are using the transposed pivot now
+    x=transposed_pivot.columns.tolist(),  # These are now the intervals
+    y=transposed_pivot.index.tolist(),  # This is now 'Bedrooms'
+    annotation_text=annotation_text,
+    colorscale='RdYlGn',
+    font_colors=['black', 'black'],
+    showscale=True
+    )
+    
+    fig_percentage_diff.update_traces(zmin=-50, zmax=50)
+
+    fig_percentage_diff.update_layout(
+        title_text='LivinParis vs Competitors 🥊',
+        xaxis_title="Interval",
+        yaxis_title=""
+    )
+    
+    #fig_percentage_diff.update_yaxes(title_text="Percentage Difference", title_standoff=25, autorange=True)
+    st.caption("Note: Negative percentages 🟥 indicate intervals where LivinParis' prices are higher on average compared to competitors.")
+    st.plotly_chart(fig_percentage_diff, use_container_width=True)
+    
+    
+    
+    st.divider()
+    
+    col1, col2, col3 = st.columns([0.2, 0.8, 0.1])
+    with col1:
+        st.download_button(
+            label="Download data (.csv)",
+            data=data.to_csv().encode('utf-8'),
+            file_name='consolidated_data.csv',
+            mime='text/csv',type="primary"
+        )
+    with col2:
+        st.write("#")
+    
+    with col3:
+        st.link_button("Go to Airbnb", "https://www.airbnb.com/")
+    
+    
+with tabs[1]:
+    
+    filtered_data_month = filtered_data[filtered_data['Check_in'].dt.month_name() == month_selection]
+    intervals_in_month = filtered_data_month['Interval'].unique()
+    
+    col1, col2= st.columns([0.8, 0.2])
+    with col1:
+        st.subheader("Pick an interval and bedrooms to check out the competitors 👀")
+        interval_selection = st.selectbox('Select Interval', intervals_in_month)
+        bedroom_selection_2 = st.selectbox('Select Bedrooms 🛏️', sorted(data['Bedrooms'].unique()))
+    with col2:
+        st.image(f"{month_selection}_2024.png", width=210)
+        
+        
+    st.divider()
+
+    filtered_data_competitors_or_livinparis = filtered_data_month[
+    ((filtered_data_month['Competitor'] == 'Yes') |
+    (filtered_data_month['Livinparis'] == 'Yes')) &
+    (filtered_data_month['Interval'] == interval_selection) & (filtered_data_month['Bedrooms'] == bedroom_selection_2)]
+    
+    competitors_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Competitor'] == 'Yes'].shape[0]
+    livinparis_interval_count = filtered_data_competitors_or_livinparis[filtered_data_competitors_or_livinparis['Livinparis'] == 'Yes'].shape[0]
+    
+    col1, col2= st.columns([0.4, 0.4])
+    with col1:
+        st.metric(label="Number of competitors scraped", value=competitors_interval_count)
+    with col2:
+        st.metric(label="Number of LivinParis appartments", value=livinparis_interval_count)
+    
+    st.divider()
+    
+    st.caption("Note: Competitor apts in 🟥 and LivinParis apts in ⬛")
+    
+    fig = px.histogram(
+        filtered_data_competitors_or_livinparis,
+        x='Price_per_night',
+        color='Competitor',
+        color_discrete_map={'Yes': 'red', 'No': 'black'},
+        barmode='group',  # Change to 'group' to prevent overlap
+        nbins=8,  # Adjust the number of bins as needed
+        range_x=[400, 3000],  # Adjust the range as needed
+        title='Distribution of Average Price per Night'
+    )
+
+    fig.update_layout(
+        xaxis_title='Average Price per Night',
+        yaxis_title='Count',
+        showlegend=False  # Add this line to remove the legend
+    )
+
+    # Show the figure in the Streamlit app
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.divider()
+            
+
+with tabs[2]:
+    # Selecting specific columns
+    
+    columns_to_display = ['Title', 'Price_per_night','Rating', 'Number_of_reviews','Livinparis','Competitor','Check_in','Check_out','Listing_id','URL' ]
+    df_display = data[columns_to_display].copy()
+    df_display['Listing_id'] = df_display['Listing_id'].astype(str)
+    
+    st.subheader('Filter you data')
+    filtered_data = filter_dataframe(df_display)
+
+    # Display the filtered dataframe
+    st.dataframe(filtered_data)
 
