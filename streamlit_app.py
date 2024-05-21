@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 import matplotlib.dates as mdates
 import urllib
-from urllib.parse import urlparse
+from urllib.parse import parse_qs
 import numpy as np
 import plotly.figure_factory as ff
 import calplot
